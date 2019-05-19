@@ -4,40 +4,72 @@ import java.beans.*;
 
 public class YutNoRiSet{
 
-    final int BACKDO = -1;
-    final int MO = 0;
-    final int DO = 1;
-    final int GEA = 2;
-    final int GIR = 3;
-    final int YUT = 4;
+    public final int BACKDO = -1;
+    public final int MO = 0;
+    public final int DO = 1;
+    public final int GEA = 2;
+    public final int GIR = 3;
+    public final int YUT = 4;
 
-    public Player[] players;
-    public Circle[] boards;
-    public Yut[] yutSet;
+    public final int YUTSETSIZE = 4;
 
-    public YutNoRiSet(int numOfPlayer, int numOfPiece){
-        for(int i = 0; i < numOfPlayer; i++){
-            players[i] = new Player(i, numOfPiece);
-        }
+    public final String NORMALBOARD = "normal";
+    public final String TWOWAYBOARD = "twoway";
 
-        for(int i = 0; i < 4; i++){
-            if(i != 3) {
-                yutSet[i] = new Yut("Normal");
+    private ArrayList<ArrayList<Piece>> pieces;
+    private Board board;
+    private ArrayList<Yut> yutSet;
+
+    private int[] players;
+
+    private boolean checkCatch;
+
+    private int numOfPlayer;
+    private int numOfPiece;
+
+    private int whichPlayerTrun;
+
+
+    public YutNoRiSet() {
+        yutSet = new ArrayList<Yut>();
+        for(int i = 0; i < YUTSETSIZE; i++){
+            if(i != YUTSETSIZE - 1) {
+                yutSet.add(new Yut("Normal"));
             } else {
-                yutSet[i] = new Yut("BackDo");
+                yutSet.add(new Yut("BackDo"));
             }
         }
+        board = new Board();
+
+    }
+
+    public void setOption(int numOfPlayer, int numOfPiece){
+        this.numOfPiece = numOfPiece;
+        this.numOfPlayer = numOfPlayer;
+
+        players = new int[numOfPlayer];
+
+        for(int i = 0; i < numOfPlayer; i++){
+            pieces = new ArrayList<ArrayList<Piece>>();
+            ArrayList<Piece> tempPiece = new ArrayList<Piece>();
+            for(int j = 0; j < numOfPiece; j++){
+                tempPiece.add(new Piece(i,j, i, j));
+            }
+            pieces.add(tempPiece);
+            players[i] = 0;
+        }
+        whichPlayerTrun = 0;
     }
 
     public int rollYut(){
         int cal = 0;
-        for(int i = 0; i < 3; i++){
-            if(!yutSet[i].throwYut()){
+        for(int i = 0; i < YUTSETSIZE-1; i++){
+            if(!yutSet.get(i).throwYut()){
                 cal++;
             }
         }
 
-        if(!yutSet[3].throwYut()){
+        if(!yutSet.get(YUTSETSIZE-1).throwYut()){
             if(cal == 0){
                 return BACKDO;
             }
@@ -45,5 +77,34 @@ public class YutNoRiSet{
         }
 
         return cal;
+    }
+
+    public void showMovable(ArrayList<Integer> result,
+                            int selectedPieceid){
+        Piece temp = pieces.get(whichPlayerTrun).get(selectedPieceid);
+        board
+
+
+    }
+
+    public void move(int playerId, int selectedPieceId, int selectedPosition){
+
+    }
+
+    public void endTurn(){
+        whichPlayerTrun = (whichPlayerTrun + 1)%numOfPlayer;
+    }
+
+    public int getWhichPlayerTurn(){
+        return whichPlayerTrun;
+    }
+
+    public boolean checkEnd(){
+        for(int i : players){
+            if(i == numOfPiece){
+                return true;
+            }
+        }
+        return false;
     }
 }

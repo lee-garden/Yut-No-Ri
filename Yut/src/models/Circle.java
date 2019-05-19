@@ -1,39 +1,41 @@
 package models;
 
-public class Circle {
+public class Circle extends Location{
 
 
-    private int circleId;
     private String type;
-    private boolean occupied = false;
-    private boolean highlighted = false;
+    private boolean occupied;
+    private boolean highlighted;
 
-    public Circle(int circleId, String type){
-        this.circleId = circleId;
+    Circle(int circleId, String type, int row, int column){
+        setId(circleId);
         this.type = type;
+        setLocation(row,column);
+        occupied = false;
+        highlighted = false;
     }
 
-    public int getCircleId(){
-        return circleId;
-    }
-
-    public String getType(){
+    String getType(){
         return type;
     }
 
-    public boolean isOccupied(){
+    void setType(String type){
+        this.type = type;
+    }
+
+    boolean isOccupied(){
         return occupied;
     }
 
-    public void toggleOccupied(){
+    void toggleOccupying(){
         if(occupied){
-            occupied = false;
+            occupied =false;
         } else {
             occupied = true;
         }
     }
 
-    public boolean isHighlighted(){
+    boolean isHighlighted(){
         return highlighted;
     }
 
@@ -44,4 +46,5 @@ public class Circle {
             highlighted = true;
         }
     }
+
 }

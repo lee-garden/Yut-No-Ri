@@ -16,7 +16,7 @@ public class Yut {
         return status;
     }
 
-    public boolean throwYut(){
+    boolean throwYut(){
         Random generate = new Random();
         status = generate.nextBoolean();
         return status;

@@ -1,25 +1,50 @@
 package models;
+import java.util.ArrayList;
 
-public class Piece {
 
+class Piece extends Location{
+    private int ownerId;
+    private boolean reachToTheFinish;
+    private ArrayList<Piece> group;
 
-    private int pieceId;
-    private int location;
+    private int firstRow;
+    private int firstColumn;
 
-    public int getPieceId(){
-        return pieceId;
+    Piece(int row, int column, int owenerId, int pieceId) {
+
+        this.ownerId = owenerId;
+        setId(pieceId);
+
+        group = new ArrayList<Piece>();
+        group.add(this);
+
+        setLocation(row, column);
+
+        firstRow = row;
+        firstColumn = column;
+
+        reachToTheFinish = false;
     }
 
-    public int getLocation(){
-        return location;
+    public int getOwnerId(){
+        return ownerId;
     }
 
-    public void getLocation(int newLocation){
-        this.location = newLocation;
+    void setGone(){
+        reachToTheFinish=true;
     }
 
-    public Piece(int pieceId, int location){
-        this.pieceId = pieceId;
-        this.location = location;
+    boolean isGone(){
+        return reachToTheFinish;
+    }
+
+    void groupAdd(Piece pieceId){
+        group.add(pieceId);
+    }
+
+    void reset(){
+        setLocation(firstRow, firstColumn);
+        group.clear();
+        group.add(this);
     }
 }
