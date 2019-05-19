@@ -55,7 +55,7 @@ public class YutNoRiSet{
                 tempPiece.add(new Piece(0,0, i, i*10+j));
             }
             pieces.add(tempPiece);
-            players[i] = 0;
+            players[i] = numOfPiece;
         }
         whichPlayerTrun = 0;
     }
@@ -78,17 +78,51 @@ public class YutNoRiSet{
         return cal;
     }
 
+    // 결과들이랑 pieceId 받아가지고 이동 가능한 위치들의 하이라이트 그거를 켜줌.
     public void showMovable(ArrayList<Integer> result,
-                            int selectedPieceid){
+                            int selectedPieceId){
         board.setAllUnClickable();
-        Piece tempP = pieces.get(whichPlayerTrun).get(selectedPieceid);
-        Circle tempC = board.getCircleByRowCoulmn(tempP.getRow(),tempP.getColumn());
+        Piece tempP = pieces.get(selectedPieceId/10).get(selectedPieceId%10);
+        Circle tempC;
+        if(tempP.getOutOfPan()){
+            tempC = board.getCircleByRowCoulmn(1,1);
+        }else{
+            tempC = board.getCircleByRowCoulmn(tempP.getRow(),tempP.getColumn());
+        }
 
         for(int i : result){
             for(int j = 0; j < tempC.getId(); j++){
-                Circle movable = board.getCircleByRowCoulmn(
-                        tempC.getNextRow().get(j)*i,
-                        tempC.getNextColumn().get(j)*i);
+                int nextRow =tempC.getNextRow().get(j)*i;
+                int nextColumn = tempC.getNextColumn().get(j)*i;
+
+                // 영역을 넘어섬
+                if(nextRow < 1 || nextColumn < 1 || nextRow > 7 || nextColumn > 7){
+                    if(nextRow < 1){
+                        // 판에서 도착지 넘어서는 경우
+                        if(nextColumn< 1) {
+                            nextRow = 1;
+                            nextColumn = 1;
+                        }
+                        // 판에서 왼쪽 아래로 빠지는 경우와 왼쪽 대각선으로 빠지는 경우
+                        else{
+                            nextColumn = 7 - (1 - nextRow);
+                            nextRow = 1;
+                        }
+                    }
+                    // 판에서 위로 솓구치는 경우
+                    else if(nextRow > 7){
+                        nextColumn = nextColumn + nextRow-7;
+                        nextRow = 7;
+                    }else{
+                        // 판에서 왼쪽으로 빠지는 경우
+                        if(nextColumn > 7){
+                            nextRow = 14 - nextColumn;
+                            nextRow = 7;
+                        }
+                    }
+                }
+
+                Circle movable = board.getCircleByRowCoulmn(nextRow, nextColumn);
                 movable.setHighlighted();
                 movable.setClickable();
             }
@@ -96,6 +130,7 @@ public class YutNoRiSet{
     }
 
 
+    // 움직일 말을 선택하여 그 말을 지정한 곳으로 옮김.
     public void move(
             int playerId,
             int selectedPieceId,
@@ -105,6 +140,7 @@ public class YutNoRiSet{
         checkCatch = false;
         // 하이라이트 끔.
         board.setAllUnHighlight();
+
         Circle temp = board.getCircleByRowCoulmn(row,column);
         Piece targetPiece = pieces.get(playerId).get(selectedPieceId);
 
@@ -113,21 +149,28 @@ public class YutNoRiSet{
         // 현재 위치로 그룹핑된 말들을 옮김.
         for(Piece i : targetPiece.getGroup()){
             i.setLocation(row, column);
+            if(i.getOutOfPan()){
+                i.setOutOfPan();
+            }
+            if(row == 1 && column == 1){
+                i.setGone();
+                players[playerId]--;
+            }
         }
 
         // 만약 옮긴 위치에 다른 말이 있을 때 예외 상황 처리
-        int pieceId;
+        Piece tempPiece;
         if(temp.isOccupied()){
-            pieceId = temp.getOccupiedBy();
+            tempPiece = getPieceById(temp.getOccupiedBy());
             // 다른 사람의 말이 있을 때 말을 원위치하고 잡았음을 알림
-            if(pieceId/10 != whichPlayerTrun){
+            if(tempPiece.getOwnerId() != playerId){
                 checkCatch = true;
-                pieces.get(pieceId/10).get(pieceId%10).reset();
+                tempPiece.reset();
             }
             // 내 말일 때 그룹핑 해주고 clickable을 false로 바꿔줌.
             else {
-                targetPiece.groupAdd(pieces.get(pieceId/10).get(pieceId%10));
-                pieces.get(pieceId/10).get(pieceId%10).resetClickable();
+                targetPiece.groupAdd(tempPiece);
+                tempPiece.resetClickable();
             }
         }
 
@@ -147,10 +190,10 @@ public class YutNoRiSet{
         return checkCatch;
     }
 
-    public int getMaxEnd(){
+    public int checkEnd(){
         int min = 10;
         for(int i : players){
-            if(i == numOfPiece){
+            if(i <= 0){
                 return 0;
             }
 
@@ -159,5 +202,9 @@ public class YutNoRiSet{
             }
         }
         return min;
+    }
+
+    Piece getPieceById(int pieceId){
+        return pieces.get(pieceId/10).get(pieceId%10);
     }
 }

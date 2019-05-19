@@ -7,15 +7,15 @@ class Piece extends ClickableGameObject {
     private int ownerId;
     private boolean reachToTheFinish;
     private ArrayList<Piece> group;
+    private boolean outOfPan;
 
     private int firstRow;
     private int firstColumn;
 
-    Piece(int row, int column, int owenerId, int pieceId) {
+    Piece(int row, int column,int ownerId, int pieceId) {
 
-        this.ownerId = owenerId;
         setId(pieceId);
-
+        this.ownerId = ownerId;
         group = new ArrayList<Piece>();
         group.add(this);
 
@@ -26,9 +26,10 @@ class Piece extends ClickableGameObject {
 
         reachToTheFinish = false;
         this.setClickable();
+        outOfPan = true;
     }
 
-    public int getOwnerId(){
+    int getOwnerId(){
         return ownerId;
     }
 
@@ -52,6 +53,15 @@ class Piece extends ClickableGameObject {
         setLocation(firstRow, firstColumn);
         group.clear();
         group.add(this);
+        outOfPan = true;
+    }
+
+    boolean getOutOfPan(){
+        return outOfPan;
+    }
+
+    void setOutOfPan(){
+        outOfPan = false;
     }
 
 }
