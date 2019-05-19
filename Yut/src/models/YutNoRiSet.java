@@ -48,12 +48,11 @@ public class YutNoRiSet{
         this.numOfPlayer = numOfPlayer;
 
         players = new int[numOfPlayer];
-
+        pieces = new ArrayList<ArrayList<Piece>>();
         for(int i = 0; i < numOfPlayer; i++){
-            pieces = new ArrayList<ArrayList<Piece>>();
             ArrayList<Piece> tempPiece = new ArrayList<Piece>();
             for(int j = 0; j < numOfPiece; j++){
-                tempPiece.add(new Piece(i,j, i, j));
+                tempPiece.add(new Piece(0,0, i, i*10+j));
             }
             pieces.add(tempPiece);
             players[i] = 0;
@@ -81,30 +80,84 @@ public class YutNoRiSet{
 
     public void showMovable(ArrayList<Integer> result,
                             int selectedPieceid){
-        Piece temp = pieces.get(whichPlayerTrun).get(selectedPieceid);
-        board
+        board.setAllUnClickable();
+        Piece tempP = pieces.get(whichPlayerTrun).get(selectedPieceid);
+        Circle tempC = board.getCircleByRowCoulmn(tempP.getRow(),tempP.getColumn());
 
-
+        for(int i : result){
+            for(int j = 0; j < tempC.getId(); j++){
+                Circle movable = board.getCircleByRowCoulmn(
+                        tempC.getNextRow().get(j)*i,
+                        tempC.getNextColumn().get(j)*i);
+                movable.setHighlighted();
+                movable.setClickable();
+            }
+        }
     }
 
-    public void move(int playerId, int selectedPieceId, int selectedPosition){
 
+    public void move(
+            int playerId,
+            int selectedPieceId,
+            int row,
+            int column){
+
+        checkCatch = false;
+        // 하이라이트 끔.
+        board.setAllUnHighlight();
+        Circle temp = board.getCircleByRowCoulmn(row,column);
+        Piece targetPiece = pieces.get(playerId).get(selectedPieceId);
+
+        // 이전 위치가 비었음을 알려줌
+        board.getCircleByRowCoulmn(targetPiece.getRow(), targetPiece.getColumn()).toggleOccupying();
+        // 현재 위치로 그룹핑된 말들을 옮김.
+        for(Piece i : targetPiece.getGroup()){
+            i.setLocation(row, column);
+        }
+
+        // 만약 옮긴 위치에 다른 말이 있을 때 예외 상황 처리
+        int pieceId;
+        if(temp.isOccupied()){
+            pieceId = temp.getOccupiedBy();
+            // 다른 사람의 말이 있을 때 말을 원위치하고 잡았음을 알림
+            if(pieceId/10 != whichPlayerTrun){
+                checkCatch = true;
+                pieces.get(pieceId/10).get(pieceId%10).reset();
+            }
+            // 내 말일 때 그룹핑 해주고 clickable을 false로 바꿔줌.
+            else {
+                targetPiece.groupAdd(pieces.get(pieceId/10).get(pieceId%10));
+                pieces.get(pieceId/10).get(pieceId%10).resetClickable();
+            }
+        }
+
+        // 옮긴 위치의 보드를 '차지 됨' 상태로 바꿈.
+        board.getCircleByRowCoulmn(row, column).setOccupiedBy(selectedPieceId);
+        board.getCircleByRowCoulmn(row,column).toggleOccupying();
     }
 
     public void endTurn(){
-        whichPlayerTrun = (whichPlayerTrun + 1)%numOfPlayer;
+        whichPlayerTrun = (whichPlayerTrun + 1)% numOfPlayer;
     }
 
     public int getWhichPlayerTurn(){
         return whichPlayerTrun;
     }
+    public boolean checkCatch(){
+        return checkCatch;
+    }
 
-    public boolean checkEnd(){
+    public int getMaxEnd(){
+        int min = 10;
         for(int i : players){
             if(i == numOfPiece){
-                return true;
+                return 0;
+            }
+
+            if(i < min){
+                min = i;
             }
         }
-        return false;
+        return min;
     }
 }

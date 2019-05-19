@@ -2,7 +2,8 @@ package models;
 import java.util.ArrayList;
 
 
-class Piece extends Location{
+class Piece extends ClickableGameObject {
+
     private int ownerId;
     private boolean reachToTheFinish;
     private ArrayList<Piece> group;
@@ -24,6 +25,7 @@ class Piece extends Location{
         firstColumn = column;
 
         reachToTheFinish = false;
+        this.setClickable();
     }
 
     public int getOwnerId(){
@@ -42,9 +44,14 @@ class Piece extends Location{
         group.add(pieceId);
     }
 
+    ArrayList<Piece> getGroup(){
+        return group;
+    }
+
     void reset(){
         setLocation(firstRow, firstColumn);
         group.clear();
         group.add(this);
     }
+
 }

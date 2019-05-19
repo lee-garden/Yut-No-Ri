@@ -1,14 +1,15 @@
 package models;
 
-public class Location {
+public class ClickableGameObject {
     private int id;
     private int row;
     private int column;
+    boolean clickable;
 
     public int getId(){
         return id;
     }
-    protected void setId(int id){
+    void setId(int id){
         this.id = id;
     }
     public int getRow(){
@@ -17,8 +18,18 @@ public class Location {
     public int getColumn() {
         return column;
     }
-    protected void setLocation(int row, int column){
+    void setLocation(int row, int column){
         this.row = row;
         this.column = column;
+    }
+
+    void setClickable(){
+        clickable = true;
+    }
+    void resetClickable(){
+        clickable =false;
+    }
+    boolean isClickable(){
+        return clickable;
     }
 }

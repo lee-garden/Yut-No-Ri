@@ -1,26 +1,36 @@
 package models;
 
-public class Circle extends Location{
+import java.util.ArrayList;
 
+public class Circle extends ClickableGameObject {
 
-    private String type;
     private boolean occupied;
+    private int occupiedBy;
     private boolean highlighted;
+    private ArrayList<Integer> nextRow;
+    private ArrayList<Integer> nextColumn;
 
-    Circle(int circleId, String type, int row, int column){
+    Circle(int circleId, int row, int column, int nextRow, int nextColumn){
         setId(circleId);
-        this.type = type;
         setLocation(row,column);
+        this.nextRow.add(nextRow);
+        this.nextColumn.add(nextColumn);
         occupied = false;
         highlighted = false;
+        clickable = false;
     }
 
-    String getType(){
-        return type;
+    ArrayList<Integer> getNextRow(){
+        return nextRow;
     }
-
-    void setType(String type){
-        this.type = type;
+    ArrayList<Integer> getNextColumn(){
+        return nextColumn;
+    }
+    void addNextRow(int next){
+        this.nextRow.add(next);
+    }
+    void addNextColumn(int next){
+        this.nextColumn.add(next);
     }
 
     boolean isOccupied(){
@@ -39,12 +49,19 @@ public class Circle extends Location{
         return highlighted;
     }
 
-    public void toggleHighlight(){
-        if(highlighted){
-            highlighted = false;
-        } else {
-            highlighted = true;
-        }
+    void setHighlighted(){
+        highlighted = true;
+    }
+    void resetHighlighted(){
+        highlighted = false;
+    }
+
+    void setOccupiedBy(int pieceId){
+        occupiedBy = pieceId;
+    }
+
+    int getOccupiedBy(){
+        return occupiedBy;
     }
 
 }
