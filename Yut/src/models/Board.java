@@ -60,18 +60,12 @@ public class Board {
   }
 
 
-  public Circle getCircleByRowCoulmn(int row, int column){
+  Circle getCircleByRowCoulmn(int row, int column){
     for(Circle i : boards){
       if(i.getRow() == row && i.getColumn() == column)
         return i;
     }
     return null;
-  }
-
-  void setAllUnClickable(){
-    for(Circle i: boards){
-      i.resetClickable();
-    }
   }
 
   void setAllUnusable(){

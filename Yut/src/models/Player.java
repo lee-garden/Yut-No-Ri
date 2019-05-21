@@ -21,7 +21,7 @@ public class Player {
     }
   }
 
-    Piece getPieceById(int pieceId){
+    Piece getPieceByPieceId(int pieceId){
     if(pieceId/10 >= playerNumber && pieceId%10 > pieceId){
       return null;
     }
@@ -45,7 +45,7 @@ public class Player {
     return min;
   }
 
-  public int getWinnerId(){
+  public int getWinnerPlayerId(){
     int id = -1;
     for(int i = 0; i < playerNumber; i++) {
       int numOfGonePiece = 0;
@@ -62,17 +62,18 @@ public class Player {
     return id;
   }
 
-  public int getPieceIdByLocation(int row, int column){
-    int targetPiece = -1;
+  Piece getPieceByLocation(int row, int column){
     for(int i = 0; i < playerNumber; i++){
       for( Piece j : players.get(i)){
         if(j.getRow() == row && j.getColumn() == column){
-          targetPiece = j.getId();
+          return j;
         }
       }
     }
-    return targetPiece;
+    return null;
   }
 
-
+  ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
+    return players.get(playerId);
+  }
 }
