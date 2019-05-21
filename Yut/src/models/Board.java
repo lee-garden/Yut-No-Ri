@@ -1,5 +1,6 @@
 package models;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 public class Board {
 
@@ -9,8 +10,11 @@ public class Board {
     final int TWOWAYBOARD = 2;
 
     private ArrayList<Circle> boards;
+    private ArrayList<Circle> highlightedAndClicableCircle;
 
     Board(){
+        boards = new ArrayList<Circle>(0);
+        highlightedAndClicableCircle = new ArrayList<Circle>();
 
         // 모퉁이 빼고 모서리 16개
         for(int i = 2; i < 7; i++){
@@ -78,5 +82,20 @@ public class Board {
         for(Circle i: boards){
             i.resetClickable();
         }
+    }
+
+    void setAllUnusable(){
+        for(Circle i : highlightedAndClicableCircle){
+            i.resetClickable();
+            i.resetHighlighted();
+        }
+        highlightedAndClicableCircle.clear();
+    }
+
+    void addHighlightedAndClicableCircleByLocation(int row, int column){
+        Circle chosenCircle = getCircleByRowCoulmn(row, column);
+        chosenCircle.setHighlighted();
+        chosenCircle.setClickable();
+        highlightedAndClicableCircle.add(chosenCircle);
     }
 }
