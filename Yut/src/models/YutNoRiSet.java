@@ -1,8 +1,14 @@
+/**
+ * @todo 리펙토링 필요, 지나친 하드 코딩임.
+ */
+
 package models;
 import java.util.ArrayList;
-import java.beans.*;
 
-public class YutNoRiSet{
+import java.beans.*;
+import java.util.Observable;
+
+public class YutNoRiSet extends Observable {
 
     public final int BACKDO = -1;
     public final int MO = 0;
@@ -13,9 +19,6 @@ public class YutNoRiSet{
 
     public final int YUTSETSIZE = 4;
 
-    public final String NORMALBOARD = "normal";
-    public final String TWOWAYBOARD = "twoway";
-
     private ArrayList<ArrayList<Piece>> pieces;
     private Board board;
     private ArrayList<Yut> yutSet;
@@ -24,10 +27,11 @@ public class YutNoRiSet{
 
     private boolean checkCatch;
 
-    private int numOfPlayer;
-    private int numOfPiece;
+    public int numOfPlayer;
+    public int numOfPiece;
 
-    private int whichPlayerTrun;
+    private int whichPlayerTurn;
+
 
 
     public YutNoRiSet() {
@@ -57,7 +61,7 @@ public class YutNoRiSet{
             pieces.add(tempPiece);
             players[i] = numOfPiece;
         }
-        whichPlayerTrun = 0;
+        whichPlayerTurn = 0;
     }
 
     public int rollYut(){
@@ -75,12 +79,14 @@ public class YutNoRiSet{
             cal++;
         }
 
+        setChanged();
+        notifyObservers();
+
         return cal;
     }
 
     // 결과들이랑 pieceId 받아가지고 이동 가능한 위치들의 하이라이트 그거를 켜줌.
-    public void showMovable(ArrayList<Integer> result,
-                            int selectedPieceId){
+    public void showMovable(ArrayList<Integer> result, int selectedPieceId){
         board.setAllUnClickable();
         Piece tempP = pieces.get(selectedPieceId/10).get(selectedPieceId%10);
         Circle tempC;
@@ -127,12 +133,14 @@ public class YutNoRiSet{
                 movable.setClickable();
             }
         }
+
+        setChanged();
+        notifyObservers();
     }
 
 
     // 움직일 말을 선택하여 그 말을 지정한 곳으로 옮김.
     public void move(
-            int playerId,
             int selectedPieceId,
             int row,
             int column){
@@ -142,19 +150,20 @@ public class YutNoRiSet{
         board.setAllUnHighlight();
 
         Circle temp = board.getCircleByRowCoulmn(row,column);
-        Piece targetPiece = pieces.get(playerId).get(selectedPieceId);
+        Piece targetPiece = pieces.get(selectedPieceId/10).get(selectedPieceId);
 
         // 이전 위치가 비었음을 알려줌
         board.getCircleByRowCoulmn(targetPiece.getRow(), targetPiece.getColumn()).toggleOccupying();
         // 현재 위치로 그룹핑된 말들을 옮김.
         for(Piece i : targetPiece.getGroup()){
             i.setLocation(row, column);
+            // 나가 있으면 들어왔다고 상태를 바꿈.
             if(i.getOutOfPan()){
                 i.setOutOfPan();
             }
             if(row == 1 && column == 1){
                 i.setGone();
-                players[playerId]--;
+                players[selectedPieceId/10]--;
             }
         }
 
@@ -163,7 +172,7 @@ public class YutNoRiSet{
         if(temp.isOccupied()){
             tempPiece = getPieceById(temp.getOccupiedBy());
             // 다른 사람의 말이 있을 때 말을 원위치하고 잡았음을 알림
-            if(tempPiece.getOwnerId() != playerId){
+            if(tempPiece.getOwnerId() != selectedPieceId/10){
                 checkCatch = true;
                 tempPiece.reset();
             }
@@ -177,14 +186,17 @@ public class YutNoRiSet{
         // 옮긴 위치의 보드를 '차지 됨' 상태로 바꿈.
         board.getCircleByRowCoulmn(row, column).setOccupiedBy(selectedPieceId);
         board.getCircleByRowCoulmn(row,column).toggleOccupying();
+
+        setChanged();
+        notifyObservers();
     }
 
     public void endTurn(){
-        whichPlayerTrun = (whichPlayerTrun + 1)% numOfPlayer;
+        whichPlayerTurn = (whichPlayerTurn + 1)% numOfPlayer;
     }
 
     public int getWhichPlayerTurn(){
-        return whichPlayerTrun;
+        return whichPlayerTurn;
     }
     public boolean checkCatch(){
         return checkCatch;
