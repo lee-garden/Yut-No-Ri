@@ -64,7 +64,7 @@ class Piece extends ClickableGameObject {
     numOfGroupedPiece = 1;
   }
 
-  boolean getOutOfPan(){
+  boolean isOutOfPan(){
     return outOfPan;
   }
 

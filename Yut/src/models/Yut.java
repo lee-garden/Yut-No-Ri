@@ -13,7 +13,7 @@ public class Yut {
     status = true;
   }
 
-  public boolean getStatus(){
+  boolean getStatus(){
     return status;
   }
 
@@ -23,7 +23,7 @@ public class Yut {
     return status;
   }
 
-  public String getType(){
+  String getType(){
     return type;
   }
 }
