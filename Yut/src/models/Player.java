@@ -3,29 +3,76 @@ package models;
 import java.util.ArrayList;
 
 public class Player {
-    private ArrayList<Piece> pieces;
-    private int pieceNumber;
+  private ArrayList<ArrayList<Piece>> players;
+  private int pieceNumber;
+  private int playerNumber;
 
-    Player(int ownerId, int pieceNumber){
-        this.pieceNumber = pieceNumber;
-        for(int i = 0; i < pieceNumber; i++){
-            pieces.add(new Piece(0, 0, ownerId, ownerId*10+i));
+  Player(int playerNumber, int pieceNumber){
+    this.playerNumber = playerNumber;
+    this.pieceNumber = pieceNumber;
+    players = new ArrayList<ArrayList<Piece>>();
+
+    for(int i = 0; i < playerNumber; i++){
+      ArrayList<Piece> pieces = new ArrayList<Piece>();
+      for(int j = 0; j < pieceNumber; j++){
+        pieces.add(new Piece(0,0,i,i*10+j));
+      }
+      players.add(pieces);
+    }
+  }
+
+    Piece getPieceById(int pieceId){
+    if(pieceId/10 >= playerNumber && pieceId%10 > pieceId){
+      return null;
+    }
+
+    return players.get(pieceId/10).get(pieceId%10);
+  }
+
+  int getSmallestPieceLeft(){
+    int min = 100;
+    for(int i = 0; i < playerNumber; i++){
+      int numOfGonePiece=0;
+      for(Piece j : players.get(i)){
+        if(j.isGone()){
+          numOfGonePiece++;
         }
+      }
+      if(numOfGonePiece < min){
+        min = numOfGonePiece;
+      }
     }
+    return min;
+  }
 
-    Piece getPieceById(int id){
-        if(id%10 >= pieceNumber)
-            return null;
-
-        return pieces.get(id%10);
-    }
-
-    Piece getPieceByLocation(int row, int column){
-        for(Piece i : pieces){
-            if(i.getRow() == row && i.getColumn() == column){
-                return i;
-            }
+  public int getWinnerId(){
+    int id = -1;
+    for(int i = 0; i < playerNumber; i++) {
+      int numOfGonePiece = 0;
+      for (Piece j : players.get(i)) {
+        if (j.isGone()) {
+          numOfGonePiece++;
         }
-        return null;
+      }
+      if(numOfGonePiece == 0){
+        id = numOfGonePiece;
+        break;
+      }
     }
+    return id;
+  }
+
+  public int getPieceIdByLocation(int row, int column){
+    int targetPiece = -1;
+    for(int i = 0; i < playerNumber; i++){
+      for( Piece j : players.get(i)){
+        if(j.getRow() == row && j.getColumn() == column){
+          targetPiece = j.getId();
+        }
+      }
+    }
+    return targetPiece;
+  }
+
+
 }

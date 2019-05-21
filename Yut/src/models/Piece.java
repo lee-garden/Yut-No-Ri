@@ -4,64 +4,72 @@ import java.util.ArrayList;
 
 class Piece extends ClickableGameObject {
 
-    private int ownerId;
-    private boolean reachToTheFinish;
-    private ArrayList<Piece> group;
-    private boolean outOfPan;
+  private int ownerId;
+  private boolean reachToTheFinish;
+  private ArrayList<Piece> group;
+  private int numOfGroupedPiece;
+  private boolean outOfPan;
 
-    private int firstRow;
-    private int firstColumn;
+  private int firstRow;
+  private int firstColumn;
 
-    Piece(int row, int column,int ownerId, int pieceId) {
+  int getNumOfGroupedPiece(){
+    return numOfGroupedPiece;
+  }
 
-        setId(pieceId);
-        this.ownerId = ownerId;
-        group = new ArrayList<Piece>();
-        group.add(this);
+  Piece(int row, int column,int ownerId, int pieceId) {
 
-        setLocation(row, column);
+    setId(pieceId);
+    this.ownerId = ownerId;
+    group = new ArrayList<Piece>();
+    group.add(this);
+    numOfGroupedPiece = 1;
 
-        firstRow = row;
-        firstColumn = column;
+    setLocation(row, column);
 
-        reachToTheFinish = false;
-        this.setClickable();
-        outOfPan = true;
-    }
+    firstRow = row;
+    firstColumn = column;
 
-    int getOwnerId(){
-        return ownerId;
-    }
+    reachToTheFinish = false;
+    this.setClickable();
+    outOfPan = true;
+  }
 
-    void setGone(){
-        reachToTheFinish=true;
-    }
+  int getOwnerId(){
+    return ownerId;
+  }
 
-    boolean isGone(){
-        return reachToTheFinish;
-    }
+  void setGone(){
+    reachToTheFinish=true;
+  }
 
-    void groupAdd(Piece pieceId){
-        group.add(pieceId);
-    }
+  boolean isGone(){
+    return reachToTheFinish;
+  }
 
-    ArrayList<Piece> getGroup(){
-        return group;
-    }
+  void addGroup(Piece pieceId){
+    group.add(pieceId);
+    numOfGroupedPiece++;
+  }
 
-    void reset(){
-        setLocation(firstRow, firstColumn);
-        group.clear();
-        group.add(this);
-        outOfPan = true;
-    }
+  ArrayList<Piece> getGroup(){
+    return group;
+  }
 
-    boolean getOutOfPan(){
-        return outOfPan;
-    }
+  void reset(){
+    setLocation(firstRow, firstColumn);
+    group.clear();
+    group.add(this);
+    outOfPan = true;
+    numOfGroupedPiece = 1;
+  }
 
-    void setOutOfPan(){
-        outOfPan = false;
-    }
+  boolean getOutOfPan(){
+    return outOfPan;
+  }
+
+  void setOutOfPan(){
+    outOfPan = false;
+  }
 
 }
