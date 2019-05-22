@@ -179,9 +179,14 @@ public class YutNoRiSet extends Observable {
     board.getCircleByRowCoulmn(row,column).setOccupied();
   }
 
+
+
   // for view to using board
   public boolean getCircleIsOccupiedByLocation(int row, int column){
-    return board.getCircleByRowCoulmn(row, column).isOccupied();
+    if(row < 8 && row > 0 && column > 0 && column < 8 && (column != 4 || row != 4 || (row == 4 && column == 4))){
+      return board.getCircleByRowCoulmn(row, column).isOccupied();
+    }
+    return false;
   }
 
   public void setCircleOccupiedByPieceId(int row, int column, int pieceId){
@@ -249,6 +254,7 @@ public class YutNoRiSet extends Observable {
     }
     beGroupedPiece.reset();
     beGroupedPiece.setLocation(groupingPiece.getRow(), groupingPiece.getColumn());
+    beGroupedPiece.setOutOfPan();
     return groupingPiece.getId();
   }
 

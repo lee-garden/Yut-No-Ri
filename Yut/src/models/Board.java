@@ -80,4 +80,5 @@ public class Board {
     chosenCircle.setClickable();
     highlightedAndClicableCircle.add(chosenCircle);
   }
+
 }
