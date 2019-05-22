@@ -1,9 +1,11 @@
 package controller;
 
+import models.YutNoRiSet;
+
 public class gameController {
 
     public void gameControll() {
-        models.YutNoRiSet yutSet = new models.YutNoRiSet();
+        YutNoRiSet yutSet = new YutNoRiSet();
         eventController c = new eventController();
         //view.view v = new veiw();
         boolean checkReGame = false;

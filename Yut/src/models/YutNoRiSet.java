@@ -30,15 +30,15 @@ public class YutNoRiSet extends Observable {
 
   private int playerTurn;
 
-  int getPlayerTurn(){
+  public int getPlayerTurn(){
     return playerTurn;
   }
 
-  void setPlayerTurn(int turn){
+  public void setPlayerTurn(int turn){
     this.playerTurn = turn;
   }
 
-  YutNoRiSet() {
+  public YutNoRiSet() {
     yutSet = new ArrayList<Yut>();
     for(int i = 0; i < YUTSETSIZE; i++){
       if(i != YUTSETSIZE - 1) {
@@ -51,7 +51,7 @@ public class YutNoRiSet extends Observable {
 
   }
 
-  void setOption(int numOfPlayer, int numOfPiece){
+  public void setOption(int numOfPlayer, int numOfPiece){
     this.numOfPiece = numOfPiece;
     this.numOfPlayer = numOfPlayer;
 
@@ -59,7 +59,7 @@ public class YutNoRiSet extends Observable {
     playerTurn = 0;
   }
 
-  int rollYut(){
+  public int rollYut(){
     int cal = 0;
     for(int i = 0; i < YUTSETSIZE-1; i++){
       if(!yutSet.get(i).throwYut()){
@@ -191,7 +191,7 @@ public class YutNoRiSet extends Observable {
     return board.getCircleByRowCoulmn(row, column).isClickable();
   }
 
-  public void setCicleClickableByLocation(int row, int column){
+  public void setCircleClickableByLocation(int row, int column){
     board.addHighlightedAndClickableCircleByLocation(row, column);
   }
 

@@ -2,6 +2,7 @@ package controller;
 
 import models.Circle;
 import models.Piece;
+import models.YutNoRiSet;
 
 import java.util.ArrayList;
 
@@ -9,45 +10,59 @@ public class eventController {
 
     private static ArrayList<Integer> resultSet;
 
-    public boolean gameProgress(int turn, models.YutNoRiSet set){
+    public boolean gameProgress(int turn, models.YutNoRiSet set) {
         models.YutNoRiSet yutSet = set;
-        int numCanMove=0;
-        int catchPoint=0;
+        int numCanMove = 0;
+        int catchPoint = 0;
         int picId;
+        boolean endCondition;
+
+        int[] nextLocation = new int[2];
 
         resultSet = new ArrayList<Integer>();
         int result;
 
-        do{
-            if(catchPoint>=1){
+        do {
+            if (catchPoint >= 1) {
                 catchPoint--;
             }
             /*  Before Yut Roll State  */
-            do{
+            do {
                 result = yutSet.rollYut(); //윷을 굴린 결과를 배열에 저장
                 resultSet.add(result);
                 numCanMove++;
-            }while(result==4 || result==0);//모나 윷이 나오면 한번 더 윳을 굴린다.
+            } while (result == 4 || result == 0);//모나 윷이 나오면 한번 더 윳을 굴린다.
 
-            while(numCanMove>=1){// 움직일 수 있는 횟수가 남아있는동안
+            while (numCanMove >= 1) {// 움직일 수 있는 횟수가 남아있는동안
 
                 /*  Choose Move Piece State  */
                 picId = choicePiece(); // 움직일 말을 선택하고
-                if(numCanMove>1){       //2개 이상 result가 있으면
-                    showMovable(resultSet, picId, yutSet);//움직일 수 있는 칸을 보여주
-                    yutSet.move();             //움직인다.
-                    numCanMove--;
+
+                showMovable(resultSet, picId, yutSet);
+                // 어디로 갈 까~ nextLocation Movable 에서 받아옴.
+
+                /*이동하고자 하는 Circle에 다른 말이 있는지 비었는지 판단*/
+                if (set.getCircleIsOccupiedByLocation(nextLocation[0], nextLocation[1])) {
+                    /*만약 상대 말을 잡았다면*/
+                    if (set.getOwnerOfPieceByLocation(nextLocation[0], nextLocation[1]) != turn) {
+                        set.catchPieceWithLocation(nextLocation[0], nextLocation[1]);
+                        catchPoint++;
+                    } else { /*내 말을 만났다면 그룹.*/
+                        set.groupPieceByPieceId(nextLocation[0], nextLocation[1], picId);
+                    }
                 }
-                else {
-                    yutSet.move();    // numCanMove가 1이라면 바로 움직이면 된다.
-                    numCanMove--;
-                }
+
+                yutSet.move(picId, nextLocation[0], nextLocation[1]);    // numCanMove가 1이라면 바로 움직이면 된다.
+                numCanMove--;
             }
         }while(catchPoint>1); // checkPoint 즉, 상대 말을 잡은만큼 턴을 더 진행 할 수 있음.
 
-        return checkEndGame();
+        endCondition = checkEndGame();
 
+        return endCondition;
     }
+
+
 
     public boolean checkEndGame(){
         boolean end = false;
@@ -56,16 +71,23 @@ public class eventController {
     }
 
     public void showMovable(ArrayList<Integer> result, int pieceId, models.YutNoRiSet set){
-        if(tempP.getOutOfPan()){
-            tempC = board.getCircleByRowCoulmn(1,1);
+        ArrayList<ArrayList<Integer>> temp;
+        int[] location = new int[2];
+
+
+        if(set.getPieceIsInTheBoardByPieceId(pieceId)){
+            location[0] =1;
+            location[1] =1;
         }else{
-            tempC = board.getCircleByRowCoulmn(tempP.getRow(),tempP.getColumn());
+            location = set.getPieceLocationByPieceId(pieceId);
         }
 
+        temp = set.getMoveVectorByCircleLocation(location[0], location[1]);
+
         for(int i : result){
-            for(int j = 0; j < tempC.getId(); j++){
-                int nextRow =tempC.getNextRow().get(j)*i;
-                int nextColumn = tempC.getNextColumn().get(j)*i;
+            for(int j = 0; j < set.getNumberOfWayCanChooseOnCircle(location[0], location[1]); j++){
+                int nextRow = temp.get(0).get(j)*i;
+                int nextColumn = temp.get(1).get(j)*i;
 
                 // 이동하려 하는 위치가 판의 영역을 넘어서는 경우 맞춰줌
                 if(nextRow < 1 || nextColumn < 1 || nextRow > 7 || nextColumn > 7){
@@ -94,11 +116,8 @@ public class eventController {
                     }
                 }
 
-                board.addHighlightedAndClickableCircleByLocation(nextRow, nextColumn);
+                set.setCircleClickableByLocation(nextRow, nextColumn);
             }
         }
-
-        setChanged();
-        notifyObservers();
     }
 }
