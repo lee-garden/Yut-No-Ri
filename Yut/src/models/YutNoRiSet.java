@@ -6,6 +6,7 @@
 
 package models;
 
+import javax.swing.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -38,7 +39,7 @@ public class YutNoRiSet extends Observable {
     this.playerTurn = turn;
   }
 
-  YutNoRiSet() {
+  public YutNoRiSet() {
     yutSet = new ArrayList<Yut>();
     for(int i = 0; i < YUTSETSIZE; i++){
       if(i != YUTSETSIZE - 1) {
@@ -51,7 +52,7 @@ public class YutNoRiSet extends Observable {
 
   }
 
-  void setOption(int numOfPlayer, int numOfPiece){
+  public void setOption(int numOfPlayer, int numOfPiece){
     this.numOfPiece = numOfPiece;
     this.numOfPlayer = numOfPlayer;
 
@@ -59,7 +60,7 @@ public class YutNoRiSet extends Observable {
     playerTurn = 0;
   }
 
-  int rollYut(){
+  public int rollYut(){
     int cal = 0;
     for(int i = 0; i < YUTSETSIZE-1; i++){
       if(!yutSet.get(i).throwYut()){
@@ -191,7 +192,7 @@ public class YutNoRiSet extends Observable {
     return board.getCircleByRowCoulmn(row, column).isClickable();
   }
 
-  public void setCicleClickableByLocation(int row, int column){
+  public void setCircleClickableByLocation(int row, int column){
     board.addHighlightedAndClickableCircleByLocation(row, column);
   }
 
@@ -213,6 +214,13 @@ public class YutNoRiSet extends Observable {
   }
 
   // for view to using pieces
+  public int[] getPieceLocationByPieceId(int pieceId){
+    int[] temp = new int[2];
+    temp[0] = player.getPieceByPieceId(pieceId).getRow();
+    temp[1] = player.getPieceByPieceId(pieceId).getColumn();
+    return temp;
+  }
+
   public int getOwnerOfPieceByLocation(int row, int column){
     return player.getPieceByLocation(row, column).getOwnerId();
   }
@@ -227,25 +235,28 @@ public class YutNoRiSet extends Observable {
   }
 
   public int groupPieceByPieceId(int row, int column, int pieceId){
-    Piece placedPiece = player.getPieceByLocation(row, column);
-    Piece movePiece = player.getPieceByPieceId(pieceId);
+    Piece beGroupedPiece = player.getPieceByLocation(row, column);
+    Piece groupingPiece = player.getPieceByPieceId(pieceId);
 
-    if(placedPiece.getNumOfGroupedPiece() < movePiece.getNumOfGroupedPiece()){
-      movePiece.addGroup(placedPiece);
-      placedPiece.resetClickable();
-      return movePiece.getId();
-    } else {
-      placedPiece.addGroup(movePiece);
-      movePiece.resetClickable();
-      return placedPiece.getId();
+    if(groupingPiece.getNumOfGroupedPiece() < beGroupedPiece.getNumOfGroupedPiece()){
+      Piece temp = groupingPiece;
+      groupingPiece = beGroupedPiece;
+      beGroupedPiece = temp;
     }
+
+    for(Piece i : beGroupedPiece.getGroup()){
+      groupingPiece.addGroup(i);
+    }
+    beGroupedPiece.reset();
+    beGroupedPiece.setLocation(groupingPiece.getRow(), groupingPiece.getColumn());
+    return groupingPiece.getId();
   }
 
   public int getNumbOfGroupedPieceById(int pieceId){
     return player.getPieceByPieceId(pieceId).getNumOfGroupedPiece();
   }
 
-  public void setPieceClickableByPlayerId(int playerId){
+  public void setPiecesClickableByPlayerId(int playerId){
     for(Piece i : player.getPieceArrayByPlayerId(playerId)){
       if(!i.isGone()){
         i.setClickable();
@@ -253,7 +264,7 @@ public class YutNoRiSet extends Observable {
     }
   }
 
-  public void resetPieceClickableByPlayerId(int playerId){
+  public void resetPiecesClickableByPlayerId(int playerId){
     for(Piece i : player.getPieceArrayByPlayerId(playerId)){
       if(!i.isGone()){
         i.resetClickable();
@@ -262,7 +273,7 @@ public class YutNoRiSet extends Observable {
   }
 
   // @todo 플레이어 아이디만으로 각 피스에 접근하는 함수 추가 필요
-  public boolean[] getPieceIsInTheBoardByPlayerId(int playerId){
+  public boolean[] getPiecesIsInTheBoardByPlayerId(int playerId){
     boolean[] temp = new boolean[numOfPiece];
     for(int i = 0; i < numOfPiece; i++){
       temp[i] = player.getPieceArrayByPlayerId(playerId).get(i).isOutOfPan();
