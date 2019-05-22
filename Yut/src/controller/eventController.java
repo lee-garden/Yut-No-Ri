@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class eventController {
 
     private static ArrayList<Integer> resultSet;
+    private static ArrayList<Circle> reachableCircle;
 
     public boolean gameProgress(int turn, models.YutNoRiSet set) {
         models.YutNoRiSet yutSet = set;
@@ -20,6 +21,7 @@ public class eventController {
         int[] nextLocation = new int[2];
 
         resultSet = new ArrayList<Integer>();
+        reachableCircle = new ArrayList<Circle>();
         int result;
 
         do {
@@ -38,8 +40,10 @@ public class eventController {
                 /*  Choose Move Piece State  */
                 picId = choicePiece(); // 움직일 말을 선택하고
 
+                reachableCircle = getReachableCircle(resultSet, picId, yutSet);
                 showMovable(resultSet, picId, yutSet);
                 // 어디로 갈 까~ nextLocation Movable 에서 받아옴.
+
 
                 /*이동하고자 하는 Circle에 다른 말이 있는지 비었는지 판단*/
                 if (set.getCircleIsOccupiedByLocation(nextLocation[0], nextLocation[1])) {
@@ -68,6 +72,19 @@ public class eventController {
         boolean end = false;
         if(numOfPiece<=0) {end = true;}
         return end;
+    }
+
+    public ArrayList<Circle> getReachableCircle(ArrayList<Integer> result, int picId, models.YutNoRiSet set){
+        ArrayList<Circle> tmp = new ArrayList<Circle>();
+        int[] location = new int[2];
+
+        location = set.getPieceLocationByPieceId(picId);
+
+        for(int i = 0; i < result.size(); i++){
+            tmp.add(set.get)
+        }
+
+        return tmp;
     }
 
     public void showMovable(ArrayList<Integer> result, int pieceId, models.YutNoRiSet set){
