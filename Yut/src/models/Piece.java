@@ -68,6 +68,7 @@ class Piece extends ClickableGameObject {
     return outOfPan;
   }
 
+  // 이름 수정 필요
   void setOutOfPan(){
     outOfPan = false;
   }

@@ -1,6 +1,6 @@
 package models;
 
-//import java.util.Random;
+import java.util.Random;
 
 public class Yut {
 
@@ -18,8 +18,8 @@ public class Yut {
   }
 
   boolean throwYut(){
-//    Random generate = new Random();
-//    status = generate.nextBoolean();
+    Random generate = new Random();
+    status = generate.nextBoolean();
     return status;
   }
 
