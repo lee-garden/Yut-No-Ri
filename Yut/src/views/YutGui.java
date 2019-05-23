@@ -24,6 +24,7 @@ public class YutGui {
   static JFrame mainFrame;
   static ImagePanel btn[][];
   public static JPanel yutBoard;
+  static YutNoRiSet yutnoriset;
 
   public static void setupStartUI(){
     mainFrame = new JFrame("Mode Selection");
@@ -41,6 +42,7 @@ public class YutGui {
   }
 
   public static void setupYutGUI() {
+
     mainFrame = new JFrame("Yut-No-Ri");
     mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,12 +61,11 @@ public class YutGui {
       for(int j = 0; j < 7; j++) {
         btn[i][j] = new ImagePanel();
         btn[i][j].setOpaque(true);
-
-        if( !YutNoRiSet.getCircleIsClickableByLocation(i, j) ) {
-          btn[i][j].setBackground(Color.WHITE);
-        }
-        else {
+        System.out.println("yolo");
+        if (!(yutnoriset.getCircleIsClickableByLocation(i, j))) {
           btn[i][j].setBackground(Color.DARK_GRAY);
+        } else {
+          btn[i][j].setBackground(Color.WHITE);
         }
 
         yutBoard.add(btn[i][j]);
