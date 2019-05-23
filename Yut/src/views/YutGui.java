@@ -1,5 +1,6 @@
 package views;
 
+import models.YutNoRiSet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -21,6 +22,7 @@ import javax.swing.border.LineBorder;
 public class YutGui {
   static final int FRAME_WIDTH = 1000, FRAME_HEIGHT = 1000;
   static JFrame mainFrame;
+  static ImagePanel btn[][];
   public static JPanel yutBoard;
 
   public static void setupStartUI(){
@@ -50,6 +52,25 @@ public class YutGui {
     yutBoard.setLayout(new GridLayout(7, 7));
     yutBoard.setBackground(Color.WHITE);
     yutBoard.setBorder(new EmptyBorder(30, 30, 30, 30));
+
+    btn = new ImagePanel[7][7];
+
+    for(int i = 0; i < 7; i++) {
+      for(int j = 0; j < 7; j++) {
+        btn[i][j] = new ImagePanel();
+        btn[i][j].setOpaque(true);
+
+        if( !YutNoRiSet.getCircleIsClickableByLocation(i, j) ) {
+          btn[i][j].setBackground(Color.WHITE);
+        }
+        else {
+          btn[i][j].setBackground(Color.DARK_GRAY);
+        }
+
+        yutBoard.add(btn[i][j]);
+        btn[i][j].repaint();
+      }
+    }
 
     contentPane.add(yutBoard, BorderLayout.CENTER);
     mainFrame.setVisible(true);

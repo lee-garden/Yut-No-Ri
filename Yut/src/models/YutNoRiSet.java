@@ -188,7 +188,7 @@ public class YutNoRiSet extends Observable {
     board.getCircleByRowCoulmn(row, column).setOccupiedBy(pieceId);
   }
 
-  public boolean getCircleIsClickableByLocation(int row, int column){
+  public static boolean getCircleIsClickableByLocation(int row, int column){
     return board.getCircleByRowCoulmn(row, column).isClickable();
   }
 
