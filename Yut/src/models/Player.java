@@ -22,7 +22,7 @@ public class Player {
   }
 
     Piece getPieceByPieceId(int pieceId){
-    if(pieceId/10 >= playerNumber && pieceId%10 > pieceId){
+    if(pieceId/10 >= playerNumber && pieceId%10 >= pieceNumber){
       return null;
     }
 
