@@ -32,13 +32,13 @@ public class Board {
     // 왼위
     boards.add(new Circle(TWOWAYBOARD, 7, 7, -1, 0));
     // 왼위에서 대각선으로 가는 길
-    boards.get(19).addNextRow(-1);
-    boards.get(19).addNextColumn(-1);
+    boards.get(18).addNextRow(-1);
+    boards.get(18).addNextColumn(-1);
     // 오위
     boards.add(new Circle(TWOWAYBOARD, 7, 1, 0, 1));
     // 오위에서 대각선으로 가는 길
-    boards.get(20).addNextRow(1);
-    boards.get(20).addNextColumn(1);
+    boards.get(19).addNextRow(1);
+    boards.get(19).addNextColumn(1);
 
     // 가운데 9칸
     // 왼쪽위에서 오른쪽 아래로 가는 칸
@@ -54,24 +54,18 @@ public class Board {
       boards.add(new Circle(NORMALBOARD, 6-i, i+2,-1,-1));
     }
     // 정가운데
-    boards.get(23).addNextRow(1);
-    boards.get(23).addNextColumn(1);
+    boards.get(22).addNextRow(1);
+    boards.get(22).addNextColumn(1);
 
   }
 
 
-  public Circle getCircleByRowCoulmn(int row, int column){
+  Circle getCircleByRowCoulmn(int row, int column){
     for(Circle i : boards){
       if(i.getRow() == row && i.getColumn() == column)
         return i;
     }
     return null;
-  }
-
-  void setAllUnClickable(){
-    for(Circle i: boards){
-      i.resetClickable();
-    }
   }
 
   void setAllUnusable(){
@@ -86,4 +80,5 @@ public class Board {
     chosenCircle.setClickable();
     highlightedAndClicableCircle.add(chosenCircle);
   }
+
 }
