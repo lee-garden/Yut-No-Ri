@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class YutNoRiSet extends Observable {
+public class YutNoRiSet {
 
   public final int BACKDO = -1;
   public final int MO = 0;
@@ -74,9 +74,6 @@ public class YutNoRiSet extends Observable {
       }
       cal++;
     }
-
-    setChanged();
-    notifyObservers();
 
     return cal;
   }
@@ -143,8 +140,17 @@ public class YutNoRiSet extends Observable {
 
     Piece targetPiece = player.getPieceByPieceId(pieceId);
 
+    int lastRow = targetPiece.getRow();
+    int lastColumn = targetPiece.getColumn();
+
+    if(lastRow <= 0)
+      lastRow = 1;
+    if(lastColumn <= 0){
+      lastColumn = 1;
+    }
+
     // 이전 위치가 비었음을 알려줌
-    board.getCircleByRowCoulmn(targetPiece.getRow(), targetPiece.getColumn()).resetOccupying();
+    board.getCircleByRowCoulmn(lastRow, lastColumn);
 
     // 현재 위치로 그룹핑된 말들을 옮김.
     for(Piece i : targetPiece.getGroup()){
@@ -179,9 +185,14 @@ public class YutNoRiSet extends Observable {
     board.getCircleByRowCoulmn(row,column).setOccupied();
   }
 
+
+
   // for view to using board
   public boolean getCircleIsOccupiedByLocation(int row, int column){
-    return board.getCircleByRowCoulmn(row, column).isOccupied();
+    if(row < 8 && row > 0 && column > 0 && column < 8&&(column != 4 || row != 4 || (row == 4 && column == 4))){
+      return board.getCircleByRowCoulmn(row, column).isOccupied();
+    }
+    return false;
   }
 
   public void setCircleOccupiedByPieceId(int row, int column, int pieceId){
@@ -249,6 +260,7 @@ public class YutNoRiSet extends Observable {
     }
     beGroupedPiece.reset();
     beGroupedPiece.setLocation(groupingPiece.getRow(), groupingPiece.getColumn());
+    beGroupedPiece.setOutOfPan();
     return groupingPiece.getId();
   }
 
@@ -273,7 +285,7 @@ public class YutNoRiSet extends Observable {
   }
 
   // @todo 플레이어 아이디만으로 각 피스에 접근하는 함수 추가 필요
-  public boolean[] getPiecesIsInTheBoardByPlayerId(int playerId){
+  public boolean[] getPiecesIsInTheBoardsByPlayerId(int playerId){
     boolean[] temp = new boolean[numOfPiece];
     for(int i = 0; i < numOfPiece; i++){
       temp[i] = player.getPieceArrayByPlayerId(playerId).get(i).isOutOfPan();

@@ -1,6 +1,8 @@
 package views;
 
+
 import models.YutNoRiSet;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -42,7 +44,6 @@ public class YutGui {
   }
 
   public static void setupYutGUI() {
-
     mainFrame = new JFrame("Yut-No-Ri");
     mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
