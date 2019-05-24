@@ -2,16 +2,21 @@ package models;
 
 import java.util.ArrayList;
 
-public class Circle extends ClickableGameObject {
+public class Circle extends GameObject {
 
   private boolean occupied;
-  private int occupiedBy;
+  // Holding id of pieces which occupying the circle
+  private ArrayList<Integer> occupyingPieces;
+
+  // Vector of reachable direction.
+  // Use ArrayList type for multi direction circle
   private ArrayList<Integer> nextRow;
   private ArrayList<Integer> nextColumn;
 
   Circle(int circleId, int row, int column, int nextRow, int nextColumn){
     setId(circleId);
     setLocation(row,column);
+    this.occupyingPieces = new ArrayList<Integer>();
     this.nextRow = new ArrayList<Integer>();
     this.nextColumn = new ArrayList<Integer>();
     this.nextRow.add(nextRow);
@@ -20,6 +25,7 @@ public class Circle extends ClickableGameObject {
     clickable = false;
   }
 
+  // Unit direction vector
   ArrayList<Integer> getNextRow(){
     return nextRow;
   }
@@ -33,24 +39,25 @@ public class Circle extends ClickableGameObject {
     this.nextColumn.add(next);
   }
 
+  // related with occupying propertys
   boolean isOccupied(){
     return occupied;
   }
-
   void setOccupied(){
     occupied = true;
   }
-
-  void resetOccupying(){
+  void resetOccupied(){
     occupied = false;
   }
-
-  void setOccupiedBy(int pieceId){
-    occupiedBy = pieceId;
+  // manage occupying pieces
+  ArrayList<Integer> getOccupyingPieces(){
+    return occupyingPieces;
   }
-
-  int getOccupiedBy(){
-    return occupiedBy;
+  void addOccupyingPieces(int pieceId){
+    occupyingPieces.add(pieceId);
+  }
+  void deleteOccupyingPieces(){
+    occupyingPieces.clear();
   }
 
 }

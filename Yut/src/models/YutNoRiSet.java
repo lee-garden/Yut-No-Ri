@@ -13,21 +13,21 @@ import java.util.Observable;
 
 public class YutNoRiSet {
 
-  public final int BACKDO = -1;
-  public final int MO = 0;
-  public final int DO = 1;
-  public final int GEA = 2;
-  public final int GIR = 3;
-  public final int YUT = 4;
+  public final int BACKDO = 0;
+  public final int MO = 1;
+  public final int DO = 2;
+  public final int GEA = 3;
+  public final int GIR = 4;
+  public final int YUT = 5;
 
-  public final int YUTSETSIZE = 4;
+  final int YUTSETSIZE = 4;
 
   private Player player;
   private Board board;
   private ArrayList<Yut> yutSet;
 
-  public int numOfPlayer;
-  public int numOfPiece;
+  int numOfPlayer;
+  int numOfPiece;
 
   private int playerTurn;
 
@@ -132,178 +132,210 @@ public class YutNoRiSet {
 //    notifyObservers();
 //  }
 
+  // @todo 다음 위치의 친구들을 컨트롤러와 move 중 누가 없앨지 생각해야함.
   // 움직일 말을 선택하여 그 말을 지정한 곳으로 옮김.
   public void move(int pieceId, int row, int column){
 
     // 하이라이트 끔.
-    board.setAllUnusable();
+    board.setAllUnuChangeable();
 
+
+    // 이전 위치의 Circle에 필요한 조작 함.
     Piece targetPiece = player.getPieceByPieceId(pieceId);
 
     int lastRow = targetPiece.getRow();
     int lastColumn = targetPiece.getColumn();
 
-    if(lastRow <= 0)
+    if(targetPiece.isOutOfBoard()){
       lastRow = 1;
-    if(lastColumn <= 0){
       lastColumn = 1;
     }
 
     // 이전 위치가 비었음을 알려줌
-    board.getCircleByRowCoulmn(lastRow, lastColumn);
+    board.getCircleByRowColumn(lastRow, lastColumn);
+
 
     // 현재 위치로 그룹핑된 말들을 옮김.
-    for(Piece i : targetPiece.getGroup()){
-      i.setLocation(row, column);
-      // 나가 있으면 들어왔다고 상태를 바꿈.
-      if(i.isOutOfPan()){
-        i.setOutOfPan();
-      }
-      if(row == 1 && column == 1){
-        i.setGone();
-        i.setOutOfPan();
-      }
+    ArrayList<Integer> temp = board.getCircleByRowColumn(row,column).getOccupyingPieces();
+    for(int i : temp){
+      player.getPieceByPieceId(i).setLocation(row, column);
     }
-
-//    // 만약 옮긴 위치에 다른 말이 있을 때 예외 상황 처리
-//    Piece locatedPiece;
-//    if(temp.isOccupied()) {
-//      locatedPiece = player.getPieceById(temp.getOccupiedBy());
-//      // 다른 사람의 말이 있을 때 해당 말을 원위치하고 잡았음을 알림
-//      if (locatedPiece.getOwnerId() != pieceId / 10) {
-//        locatedPiece.reset();
-//      }
-//      // 내 말일 때 그룹핑 해주고 clickable을 false로 바꿔줌.
-//      else {
-//      targetPiece.addGroup(locatedPiece);
-//      locatedPiece.resetClickable();
-//      }
-//    }
 
     // 옮긴 위치의 보드를 '차지 됨' 상태로 바꿈.
-    board.getCircleByRowCoulmn(row, column).setOccupiedBy(pieceId);
-    board.getCircleByRowCoulmn(row,column).setOccupied();
+    board.getCircleByRowColumn(row, column).addOccupyingPieces(pieceId);
+    board.getCircleByRowColumn(row,column).setOccupied();
   }
 
 
 
-  // for view to using board
-  public boolean getCircleIsOccupiedByLocation(int row, int column){
-    Circle hello = board.getCircleByRowCoulmn(row, column);
-    if(hello != null) {
-      return hello.isOccupied();
+  // Use of board
+  public boolean isCircleIsOccupied(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).isOccupied();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return false;
+  }
+  public void setCircleOccupied(int pieceId, int row, int column){
+    try {
+      board.getCircleByRowColumn(row, column).addOccupyingPieces(pieceId);
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+  }
+
+  public boolean isCircleClickable(int row, int column){
+    try {
+      return board.getCircleByRowColumn(row, column).isClickable();
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
     return false;
   }
 
-  public void setCircleOccupiedByPieceId(int row, int column, int pieceId){
-    Circle hello = board.getCircleByRowCoulmn(row, column);
-    if(hello != null){
-      hello.setOccupiedBy(pieceId);
+  public boolean isCircleChangeable(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).isChangeable();
+    } catch(NullPointerException e) {
+      /*error handling code*/
+      return false;
+    }
+  }
+  public void setCircleChangeable(int row, int column){
+    try {
+      board.setCircleChangeable(row, column);
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
   }
 
-  public boolean getCircleIsClickableByLocation(int row, int column){
-    Circle hello = board.getCircleByRowCoulmn(row, column);
-
-    if(hello != null) {
-      return hello.isClickable();
+  public ArrayList<Integer> getOccupyingPieceIds(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).getOccupyingPieces();
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
-    return false;
+    return null;
   }
 
-  public void setCircleClickableByLocation(int row, int column){
-    board.addHighlightedAndClickableCircleByLocation(row, column);
+  public int getNumberOfVectorsOfCircle(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).getId();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return -1;
+  }
+  public ArrayList<ArrayList<Integer>> getMoveVectorOfCircle(int row, int column){
+    try{
+      ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+      temp.add(board.getCircleByRowColumn(row, column).getNextRow());
+      temp.add(board.getCircleByRowColumn(row, column).getNextColumn());
+      return temp;
+
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+
+    return null;
   }
 
-  public int getOccupyingPieceIdByLocation(int row, int column){
-    return board.getCircleByRowCoulmn(row, column).getOccupiedBy();
-  }
-
-  public ArrayList<ArrayList<Integer>> getMoveVectorByCircleLocation(int row, int column){
-    ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
-
-    temp.add(board.getCircleByRowCoulmn(row, column).getNextRow());
-    temp.add(board.getCircleByRowCoulmn(row, column).getNextColumn());
-
-    return temp;
-  }
-
-  public int getNumberOfWayCanChooseOnCircle(int row, int column){
-    return board.getCircleByRowCoulmn(row, column).getId();
-  }
-
-  // for view to using pieces
+  // Use of piece
   public int[] getPieceLocationByPieceId(int pieceId){
-    int[] temp = new int[2];
-    temp[0] = player.getPieceByPieceId(pieceId).getRow();
-    temp[1] = player.getPieceByPieceId(pieceId).getColumn();
-    return temp;
+    try{
+      int[] temp = new int[2];
+      temp[0] = player.getPieceByPieceId(pieceId).getRow();
+      temp[1] = player.getPieceByPieceId(pieceId).getColumn();
+      return temp;
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return null;
   }
 
   public int getOwnerOfPieceByLocation(int row, int column){
-    return player.getPieceByLocation(row, column).getOwnerId();
-  }
-
-  public void catchPieceWithLocation(int row, int column){
-    Piece caughtPiece = player.getPieceByLocation(row, column);
-    caughtPiece.reset();
-  }
-
-  public boolean getPieceIsClickableByPieceId(int pieceId){
-    return player.getPieceByPieceId(pieceId).isClickable();
-  }
-
-  public int groupPieceByPieceId(int row, int column, int pieceId){
-    Piece beGroupedPiece = player.getPieceByLocation(row, column);
-    Piece groupingPiece = player.getPieceByPieceId(pieceId);
-
-    if(groupingPiece.getNumOfGroupedPiece() < beGroupedPiece.getNumOfGroupedPiece()){
-      Piece temp = groupingPiece;
-      groupingPiece = beGroupedPiece;
-      beGroupedPiece = temp;
+    try{
+      return player.getPieceByLocation(row, column).getOwnerId();
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
-
-    for(Piece i : beGroupedPiece.getGroup()){
-      groupingPiece.addGroup(i);
+    return -1;
+  }
+  public int getOwnerOfPieceByPieceId(int pieceId){
+    try{
+      return player.getPieceByPieceId(pieceId).getOwnerId();
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
-    beGroupedPiece.reset();
-    beGroupedPiece.setLocation(groupingPiece.getRow(), groupingPiece.getColumn());
-    beGroupedPiece.setOutOfPan();
-    return groupingPiece.getId();
+    return -1;
   }
 
-  public int getNumbOfGroupedPieceById(int pieceId){
-    return player.getPieceByPieceId(pieceId).getNumOfGroupedPiece();
+  public void catchPiece(int row, int column){
+    try{
+      player.getPieceByLocation(row, column).reset();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
   }
 
-  public void setPiecesClickableByPlayerId(int playerId){
+  public boolean isPieceFinish(int pieceId){
+    try{
+      return player.getPieceByPieceId(pieceId).isGone();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return false;
+  }
+
+  // modify pieces to changeable without pieces that finished
+  public void setPiecesChangeable(int playerId){
     for(Piece i : player.getPieceArrayByPlayerId(playerId)){
-      if(!i.isGone()){
-        i.setClickable();
+      if(i!=null && !i.isGone()){
+        i.setChangeable();
+      }
+    }
+  }
+  public void setPiecesUnChangeable(int playerId){
+    for(Piece i : player.getPieceArrayByPlayerId(playerId)){
+      if(i != null && !i.isGone()){
+        i.resetChangeable();
       }
     }
   }
 
-  public void resetPiecesClickableByPlayerId(int playerId){
-    for(Piece i : player.getPieceArrayByPlayerId(playerId)){
-      if(!i.isGone()){
-        i.resetClickable();
-      }
+  public boolean isPieceChangeable(int pieceId){
+    try{
+      return player.getPieceByPieceId(pieceId).isChangeable();
+    } catch (NullPointerException e){
+      /* error handling*/
     }
+    return false;
   }
 
   // @todo 플레이어 아이디만으로 각 피스에 접근하는 함수 추가 필요
-  public boolean[] getPiecesIsInTheBoardsByPlayerId(int playerId){
-    boolean[] temp = new boolean[numOfPiece];
-    for(int i = 0; i < numOfPiece; i++){
-      temp[i] = player.getPieceArrayByPlayerId(playerId).get(i).isOutOfPan();
+  // 뷰에서 플레이어 판위에 없을때 보여주려고?했음
+  public boolean[] getPiecesIsOutOfBoards(int playerId){
+    try {
+      boolean[] temp = new boolean[numOfPiece];
+      for (int i = 0; i < numOfPiece; i++) {
+        temp[i] = player.getPieceArrayByPlayerId(playerId).get(i).isOutOfBoard();
+      }
+      return temp;
+    } catch (NullPointerException e){
+      /*error handling code*/
     }
-    return temp;
-  }
 
-  public boolean getPieceIsInTheBoardByPieceId(int pieceId){
-    return player.getPieceByPieceId(pieceId).isOutOfPan();
+    return null;
+  }
+  // 뷰에서 직접 하나하나 보면 쓸 수 있음.
+  public boolean isPieceOutOfBoard(int pieceId){
+    try {
+      return player.getPieceByPieceId(pieceId).isOutOfBoard();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return false;
   }
 
   // Return Yut Status
