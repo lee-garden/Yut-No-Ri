@@ -26,9 +26,10 @@ public class YutGui {
   static JFrame mainFrame;
   static ImagePanel btn[][];
   public static JPanel yutBoard;
-  static YutNoRiSet yutnoriset;
+  static YutNoRiSet yutnoriset = new YutNoRiSet();
 
   public static void setupStartUI(){
+    yutnoriset.setOption(2, 5);
     mainFrame = new JFrame("Mode Selection");
     mainFrame.setSize(FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,14 +57,14 @@ public class YutGui {
     yutBoard.setBackground(Color.WHITE);
     yutBoard.setBorder(new EmptyBorder(30, 30, 30, 30));
 
-    btn = new ImagePanel[7][7];
+    btn = new ImagePanel[8][8];
 
-    for(int i = 0; i < 7; i++) {
-      for(int j = 0; j < 7; j++) {
+    for(int i = 1; i < 8; i++) {
+      for(int j = 1; j < 8; j++) {
         btn[i][j] = new ImagePanel();
         btn[i][j].setOpaque(true);
-        System.out.println("yolo");
-        if (!(yutnoriset.getCircleIsClickableByLocation(i, j))) {
+
+        if ((yutnoriset.getCircleIsClickableByLocation(i, j))) {
           btn[i][j].setBackground(Color.DARK_GRAY);
         } else {
           btn[i][j].setBackground(Color.WHITE);
