@@ -189,18 +189,27 @@ public class YutNoRiSet {
 
   // for view to using board
   public boolean getCircleIsOccupiedByLocation(int row, int column){
-    if(row < 8 && row > 0 && column > 0 && column < 8&&(column != 4 || row != 4 || (row == 4 && column == 4))){
-      return board.getCircleByRowCoulmn(row, column).isOccupied();
+    Circle hello = board.getCircleByRowCoulmn(row, column);
+    if(hello != null) {
+      return hello.isOccupied();
     }
     return false;
   }
 
   public void setCircleOccupiedByPieceId(int row, int column, int pieceId){
-    board.getCircleByRowCoulmn(row, column).setOccupiedBy(pieceId);
+    Circle hello = board.getCircleByRowCoulmn(row, column);
+    if(hello != null){
+      hello.setOccupiedBy(pieceId);
+    }
   }
 
   public boolean getCircleIsClickableByLocation(int row, int column){
-    return board.getCircleByRowCoulmn(row, column).isClickable();
+    Circle hello = board.getCircleByRowCoulmn(row, column);
+
+    if(hello != null) {
+      return hello.isClickable();
+    }
+    return false;
   }
 
   public void setCircleClickableByLocation(int row, int column){
