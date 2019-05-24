@@ -17,7 +17,7 @@ public class Circle extends ClickableGameObject {
     this.nextRow.add(nextRow);
     this.nextColumn.add(nextColumn);
     occupied = false;
-    clickable = false;
+    clickable = true;
   }
 
   ArrayList<Integer> getNextRow(){
