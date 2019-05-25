@@ -339,7 +339,7 @@ public class YutNoRiSet {
       int num = 0;
       for (int i = 0; i < numOfPiece; i++) {
         Piece temp =  player.getPieceArrayByPlayerId(playerId).get(i);
-        if(temp.isOutOfBoard() && temp.isGone()){
+        if(temp.isOutOfBoard() && !temp.isGone()){
           num++;
         }
       }

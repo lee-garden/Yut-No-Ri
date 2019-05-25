@@ -56,7 +56,8 @@ public class YutGui {
   }
 
   public static void setupStartUI(){
-    yutnoriset.setOption(2, 5);
+    // Create max number of player and pieces for test
+    yutnoriset.setOption(4, 5);
     mainFrame = new JFrame("Mode Selection");
     mainFrame.setSize(FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,6 +80,9 @@ public class YutGui {
 
     Container contentPane = mainFrame.getContentPane();
     contentPane.setLayout(new BorderLayout(10, 10));
+
+
+    // set board
     yutBoard= new JPanel();
     yutBoard.setLayout(new GridLayout(7, 7));
     yutBoard.setBackground(Color.WHITE);
@@ -92,8 +96,12 @@ public class YutGui {
         btn[i][j].setOpaque(true);
         // btn[i][j].addMouseListener(clickBridge);
 
-        if ((yutnoriset.getCircleIsClickableByLocation(i, j))) {
-          btn[i][j].setBackground(Color.DARK_GRAY);
+        if ((yutnoriset.isCircleClickable(i, j))) {
+          if(yutnoriset.isCircleChangeable(i,j)){
+            btn[i][j].setBackground(Color.GREEN);
+          } else {
+            btn[i][j].setBackground(Color.DARK_GRAY);
+          }
         } else {
           btn[i][j].setBackground(Color.WHITE);
         }
@@ -104,8 +112,8 @@ public class YutGui {
     }
 
     JPanel statusPanels = new JPanel();
-
-    statusPanels.setLayout(new GridLayout(5, 1));
+    // Fix outlook which is not compatible with name+image+number of piece.
+    statusPanels.setLayout(new GridLayout(playerNumber, 3));
     statusPanels.setBorder(new EmptyBorder(0, 30, 0, 30));
 
     // For piece Sprite
@@ -117,6 +125,8 @@ public class YutGui {
     for (int i=0; i< playerNumber; i++) {
       statusPanels.add(player[i]);
       statusPanels.add(beginPiece[i]);
+      // Add number if player's left piece
+      statusPanels.add(new JLabel(Integer.toString(yutnoriset.howManyPiecesIsOutOfBoards(i))));
       // beginPiece[i].addMouseListener(clickBridge);
     }
 
