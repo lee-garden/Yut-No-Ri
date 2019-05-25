@@ -29,8 +29,8 @@ import javax.swing.border.LineBorder;
 
 public class BackGroundPanel extends JPanel{
   private BufferedImage img;
-  private String playerNumber;
-  private String pieceNumber;
+  private int playerNumber;
+  private int pieceNumber;
 
   public BackGroundPanel() {
 
@@ -80,30 +80,17 @@ public class BackGroundPanel extends JPanel{
     buttonPanel.add(playerNumberInput, BorderLayout.SOUTH);
     buttonPanel.add(pieceNumberInput, BorderLayout.SOUTH);
 
-    class UIclick implements MouseListener {
+    enter.addActionListener(new ActionListener() {
       @Override
-      public void mouseClicked(MouseEvent e) {
+      public void actionPerformed(ActionEvent e) {
         YutGui.mainFrame.setVisible(false);
-
+        playerNumber = Integer.parseInt(playerNumberInput.getText());
+        pieceNumber = Integer.parseInt(pieceNumberInput.getText());
         if (e.getSource().equals(enter)) {
-          YutGui.setupYutGUI();
+          YutGui.setupYutGUI(playerNumber, pieceNumber);
         }
       }
-      @Override
-      public void mousePressed(MouseEvent e) {
-      }
-      @Override
-      public void mouseReleased(MouseEvent e) {
-      }
-      @Override
-      public void mouseEntered(MouseEvent e) {
-      }
-      @Override
-      public void mouseExited(MouseEvent e) {
-      }
-    }
-
-    enter.addMouseListener(new UIclick());
+    });
 
     //INPUT TEXT AREA
     playerNumberInput.setBackground(Color.BLUE);
