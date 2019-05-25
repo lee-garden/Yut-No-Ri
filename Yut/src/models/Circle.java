@@ -22,7 +22,7 @@ public class Circle extends GameObject {
     this.nextRow.add(nextRow);
     this.nextColumn.add(nextColumn);
     this.setClickable();
-    occupied = false;
+    occupied = false
   }
 
   // Unit direction vector
