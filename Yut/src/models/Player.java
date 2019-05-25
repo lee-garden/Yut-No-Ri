@@ -80,4 +80,14 @@ public class Player {
     }
     return id;
   }
+
+  public int getNumOfPiecesOutOfBoard(int playerId){
+    int numOfPieceLocateInOutOfBoard = 0;
+    for(Piece i : getPlayerPieces(playerId)){
+      if(i.isOutOfBoard()){
+        numOfPieceLocateInOutOfBoard++;
+      }
+    }
+    return numOfPieceLocateInOutOfBoard;
+  }
 }

@@ -27,7 +27,7 @@ public class YutGui {
   static JFrame mainFrame;
   static ImagePanel btn[][];
   public static JPanel yutBoard;
-  static YutNoRiSet yutnoriset = new YutNoRiSet();
+  static YutNoRiSet yutnoriset = new YutNoRiSet(4,5);
   static PieceSprite pieceSprite = new PieceSprite();
   static JLabel player[];
   static ImagePanel beginPiece[];
@@ -56,8 +56,6 @@ public class YutGui {
   }
 
   public static void setupStartUI(){
-    // Create max number of player and pieces for test
-    yutnoriset.setOption(4, 5);
     mainFrame = new JFrame("Mode Selection");
     mainFrame.setSize(FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,8 +94,8 @@ public class YutGui {
         btn[i][j].setOpaque(true);
         // btn[i][j].addMouseListener(clickBridge);
 
-        if ((yutnoriset.isCircleClickable(i, j))) {
-          if(yutnoriset.isCircleChangeable(i,j)){
+        if ((yutnoriset.getBoard().getCircleByLocation(i, j).isClickable())) {
+          if(yutnoriset.getBoard().getCircleByLocation(i, j).isClickable()){
             btn[i][j].setBackground(Color.GREEN);
           } else {
             btn[i][j].setBackground(Color.DARK_GRAY);
@@ -126,7 +124,7 @@ public class YutGui {
       statusPanels.add(player[i]);
       statusPanels.add(beginPiece[i]);
       // Add number if player's left piece
-      statusPanels.add(new JLabel(Integer.toString(yutnoriset.howManyPiecesIsOutOfBoards(i))));
+      statusPanels.add(new JLabel(Integer.toString(yutnoriset.getPlayer().getNumOfPiecesOutOfBoard(i))));
       // beginPiece[i].addMouseListener(clickBridge);
     }
 

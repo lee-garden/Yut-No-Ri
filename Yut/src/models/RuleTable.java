@@ -9,8 +9,10 @@ public class RuleTable {
       for(int j = 0; j < 6; j++){
         if(i == 0 && j == 0){
           nextMoveTable[i][j][0] = 1;
+        } else if(i+j >= 20){
+          nextMoveTable[i][j][0] = 0;
         } else {
-          nextMoveTable[i][j][0] = j;
+            nextMoveTable[i][j][0] = j;
         }
         nextMoveTable[i][j][1] = -1;
       }
