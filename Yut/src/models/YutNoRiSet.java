@@ -1,24 +1,21 @@
 /**
  * @filename YutNoRiSet.java
  * @
- * @todo 리펙토링 필요, 지나친 하드 코딩임.
+ * @todo 빽도 구현
  */
 
 package models;
 
-import javax.swing.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Observable;
 
 public class YutNoRiSet {
 
-  public final int BACKDO = 0;
-  public final int MO = 1;
-  public final int DO = 2;
-  public final int GEA = 3;
-  public final int GIR = 4;
-  public final int YUT = 5;
+  public final int BACKDO = 5;
+  public final int MO = 0;
+  public final int DO = 1;
+  public final int GEA = 2;
+  public final int GIR = 3;
+  public final int YUT = 4;
 
   final int YUTSETSIZE = 4;
 
@@ -68,6 +65,7 @@ public class YutNoRiSet {
       }
     }
 
+    // 빽도 떤짐
     if(!yutSet.get(YUTSETSIZE-1).throwYut()){
       if(cal == 0){
         return BACKDO;
@@ -76,6 +74,17 @@ public class YutNoRiSet {
     }
 
     return cal;
+  }
+
+  // Return Yut Status
+  public boolean[] getYutSetStatus(){
+    boolean[] yutStatus = new boolean[4];
+
+    for(int i = 0; i < 4; i++){
+      yutStatus[i] = yutSet.get(i).getStatus();
+    }
+
+    return yutStatus;
   }
 
 
@@ -152,7 +161,8 @@ public class YutNoRiSet {
     }
 
     // 이전 위치가 비었음을 알려줌
-    board.getCircleByRowColumn(lastRow, lastColumn);
+    board.getCircleByRowColumn(lastRow, lastColumn).resetOccupied();
+    board.getCircleByRowColumn(lastRow, lastColumn).deleteOccupyingPieces();
 
 
     // 현재 위치로 그룹핑된 말들을 옮김.
@@ -169,7 +179,7 @@ public class YutNoRiSet {
 
 
   // Use of board
-  public boolean isCircleIsOccupied(int row, int column){
+  public boolean isCircleOccupied(int row, int column){
     try{
       return board.getCircleByRowColumn(row, column).isOccupied();
     } catch (NullPointerException e){
@@ -177,12 +187,28 @@ public class YutNoRiSet {
     }
     return false;
   }
-  public void setCircleOccupied(int pieceId, int row, int column){
+  public void addPiece2OccupyingCircle(int pieceId, int row, int column){
     try {
       board.getCircleByRowColumn(row, column).addOccupyingPieces(pieceId);
     } catch (NullPointerException e){
       /*error handling code*/
     }
+  }
+  public int getNumberOfOccupyingPieces(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).getOccupyingPieces().size();
+    } catch(NullPointerException e){
+      /* error handling */
+    }
+    return -1;
+  }
+  public ArrayList<Integer> getOccupyingPieceIds(int row, int column){
+    try{
+      return board.getCircleByRowColumn(row, column).getOccupyingPieces();
+    } catch (NullPointerException e){
+      /*error handling code*/
+    }
+    return null;
   }
 
   public boolean isCircleClickable(int row, int column){
@@ -210,15 +236,6 @@ public class YutNoRiSet {
     }
   }
 
-  public ArrayList<Integer> getOccupyingPieceIds(int row, int column){
-    try{
-      return board.getCircleByRowColumn(row, column).getOccupyingPieces();
-    } catch (NullPointerException e){
-      /*error handling code*/
-    }
-    return null;
-  }
-
   public int getNumberOfVectorsOfCircle(int row, int column){
     try{
       return board.getCircleByRowColumn(row, column).getId();
@@ -240,6 +257,8 @@ public class YutNoRiSet {
 
     return null;
   }
+
+
 
   // Use of piece
   public int[] getPieceLocationByPieceId(int pieceId){
@@ -315,18 +334,21 @@ public class YutNoRiSet {
 
   // @todo 플레이어 아이디만으로 각 피스에 접근하는 함수 추가 필요
   // 뷰에서 플레이어 판위에 없을때 보여주려고?했음
-  public boolean[] getPiecesIsOutOfBoards(int playerId){
+  public int howManyPiecesIsOutOfBoards(int playerId){
     try {
-      boolean[] temp = new boolean[numOfPiece];
+      int num = 0;
       for (int i = 0; i < numOfPiece; i++) {
-        temp[i] = player.getPieceArrayByPlayerId(playerId).get(i).isOutOfBoard();
+        Piece temp =  player.getPieceArrayByPlayerId(playerId).get(i);
+        if(temp.isOutOfBoard() && temp.isGone()){
+          num++;
+        }
       }
-      return temp;
+      return num;
     } catch (NullPointerException e){
       /*error handling code*/
     }
 
-    return null;
+    return -1;
   }
   // 뷰에서 직접 하나하나 보면 쓸 수 있음.
   public boolean isPieceOutOfBoard(int pieceId){
@@ -336,16 +358,5 @@ public class YutNoRiSet {
       /*error handling code*/
     }
     return false;
-  }
-
-  // Return Yut Status
-  public boolean[] getYutSetStatus(){
-    boolean[] yutStatus = new boolean[4];
-
-    for(int i = 0; i < 4; i++){
-      yutStatus[i] = yutSet.get(i).getStatus();
-    }
-
-    return yutStatus;
   }
 }
