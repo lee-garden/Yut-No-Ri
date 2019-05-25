@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public class eventController {
 
     private static ArrayList<Integer> resultSet;
+    private  int chosenPicecId;
 
     public boolean gameProgress(int turn, models.YutNoRiSet set){
         models.YutNoRiSet yutSet = set;
         int numCanMove=0;
         int catchPoint=0;
-        int picId;
 
         resultSet = new ArrayList<Integer>();
         int result;
@@ -32,9 +32,9 @@ public class eventController {
             while(numCanMove>=1){// 움직일 수 있는 횟수가 남아있는동안
 
                 /*  Choose Move Piece State  */
-                picId = choicePiece(); // 움직일 말을 선택하고
+                chosenPicecId = choicePiece(); // 움직일 말을 선택하고
                 if(numCanMove>1){       //2개 이상 result가 있으면
-                    showMovable(resultSet, picId, yutSet);//움직일 수 있는 칸을 보여주
+                    showMovable(resultSet, chosenPicecId, yutSet);//움직일 수 있는 칸을 보여주
                     yutSet.move();             //움직인다.
                     numCanMove--;
                 }
@@ -47,6 +47,10 @@ public class eventController {
 
         return checkEndGame();
 
+    }
+
+    public void choicePiece(int pic){
+        this.chosenPicecId=pic;
     }
 
     public boolean checkEndGame(){
