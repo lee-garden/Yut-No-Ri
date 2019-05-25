@@ -2,7 +2,7 @@ package models;
 import java.util.ArrayList;
 
 
-class Piece extends GameObject {
+public class Piece extends GameObject {
 
   private int ownerId;
   // Represent the piece is not on the board
@@ -11,7 +11,6 @@ class Piece extends GameObject {
   final int defaultColumn = 0;
 
   Piece(int row, int column,int ownerId, int pieceId) {
-
     setId(pieceId);
     this.ownerId = ownerId;
     setLocation(row, column);
@@ -20,32 +19,32 @@ class Piece extends GameObject {
   }
 
   // get owner id
-  int getOwnerId(){
+  public int getOwnerId(){
     return ownerId;
   }
 
   // clickable represent whether it exist or not
   // if not clickable, the piece is finished.
-  void setGone(){
+  public void setGone(){
     resetClickable();
   }
 
-  boolean isGone(){
-    return !clickable;
+  public boolean isGone(){
+    return !isClickable();
   }
 
   // make piece on out side of the Board
-  void reset(){
+  public void resetPieceToOrigin(){
     this.setLocation(defaultRow, defaultColumn);
     outOfBoard = true;
   }
 
   // where to put piece problem
-  boolean isOutOfBoard(){
+  public boolean isOutOfBoard(){
     return outOfBoard;
   }
 
-  void setOutOfBoard(){
+  public void setOutOfBoard(){
     outOfBoard = false;
   }
 

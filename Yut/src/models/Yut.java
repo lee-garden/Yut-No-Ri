@@ -8,22 +8,22 @@ public class Yut {
   private boolean status;
   private String type;
 
-  public Yut(String type){
+  Yut(String type){
     this.type = type;
     status = true;
   }
 
-  boolean getStatus(){
+  public boolean getStatus(){
     return status;
   }
 
-  boolean throwYut(){
+  public boolean throwYut(){
     Random generate = new Random();
     status = generate.nextBoolean();
     return status;
   }
 
-  String getType(){
+  public String getType(){
     return type;
   }
 }

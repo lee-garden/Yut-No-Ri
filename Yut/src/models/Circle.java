@@ -21,42 +21,42 @@ public class Circle extends GameObject {
     this.nextColumn = new ArrayList<Integer>();
     this.nextRow.add(nextRow);
     this.nextColumn.add(nextColumn);
+    this.setClickable();
     occupied = false;
-    clickable = false;
   }
 
   // Unit direction vector
-  ArrayList<Integer> getNextRow(){
+  public ArrayList<Integer> getNextRow(){
     return nextRow;
   }
-  ArrayList<Integer> getNextColumn(){
+  public ArrayList<Integer> getNextColumn(){
     return nextColumn;
   }
-  void addNextRow(int next){
+  public void addNextRow(int next){
     this.nextRow.add(next);
   }
-  void addNextColumn(int next){
+  public void addNextColumn(int next){
     this.nextColumn.add(next);
   }
 
   // related with occupying propertys
-  boolean isOccupied(){
+  public boolean isOccupied(){
     return occupied;
   }
-  void setOccupied(){
+  public void setOccupied(){
     occupied = true;
   }
-  void resetOccupied(){
+  public void resetOccupied(){
     occupied = false;
   }
   // manage occupying pieces
-  ArrayList<Integer> getOccupyingPieces(){
+  public ArrayList<Integer> getOccupyingPieces(){
     return occupyingPieces;
   }
-  void addOccupyingPieces(int pieceId){
+  public void addOccupyingPieces(int pieceId){
     occupyingPieces.add(pieceId);
   }
-  void deleteOccupyingPieces(){
+  public void clearOccupyingPieces(){
     occupyingPieces.clear();
   }
 
