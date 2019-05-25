@@ -3,6 +3,7 @@ package models;
 import java.util.ArrayList;
 
 public class Player {
+  // Using two dimension ArrayList to hold players and player's pieces info
   private ArrayList<ArrayList<Piece>> players;
   private int pieceNumber;
   private int playerNumber;
@@ -15,20 +16,39 @@ public class Player {
     for(int i = 0; i < playerNumber; i++){
       ArrayList<Piece> pieces = new ArrayList<Piece>();
       for(int j = 0; j < pieceNumber; j++){
+        // piece id is combination of row and column.
         pieces.add(new Piece(0,0,i,i*10+j));
       }
       players.add(pieces);
     }
   }
 
-    Piece getPieceByPieceId(int pieceId){
+  // get Piece by piece id
+  Piece getPieceByPieceId(int pieceId){
     if(pieceId/10 >= playerNumber && pieceId%10 >= pieceNumber){
       return null;
     }
 
     return players.get(pieceId/10).get(pieceId%10);
   }
+  // get Piece by location of piece
+  Piece getPieceByLocation(int row, int column){
+    for(int i = 0; i < playerNumber; i++){
+      for( Piece j : players.get(i)){
+        if(j.getRow() == row && j.getColumn() == column){
+          return j;
+        }
+      }
+    }
+    return null;
+  }
+  // get one player's pieces.
+  ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
+    return players.get(playerId);
+  }
 
+  // Used to determine whether or not it is end
+  // return the least num of pieces which not yet get to finish
   int getSmallestPieceLeft(){
     int min = 100;
     for(int i = 0; i < playerNumber; i++){
@@ -45,6 +65,7 @@ public class Player {
     return min;
   }
 
+  // return player id who's pieces are all get to the finish line
   public int getWinnerPlayerId(){
     int id = -1;
     for(int i = 0; i < playerNumber; i++) {
@@ -60,20 +81,5 @@ public class Player {
       }
     }
     return id;
-  }
-
-  Piece getPieceByLocation(int row, int column){
-    for(int i = 0; i < playerNumber; i++){
-      for( Piece j : players.get(i)){
-        if(j.getRow() == row && j.getColumn() == column){
-          return j;
-        }
-      }
-    }
-    return null;
-  }
-
-  ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
-    return players.get(playerId);
   }
 }
