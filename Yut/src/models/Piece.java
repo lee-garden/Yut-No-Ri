@@ -64,10 +64,11 @@ class Piece extends ClickableGameObject {
     numOfGroupedPiece = 1;
   }
 
-  boolean getOutOfPan(){
+  boolean isOutOfPan(){
     return outOfPan;
   }
 
+  // 이름 수정 필요
   void setOutOfPan(){
     outOfPan = false;
   }
