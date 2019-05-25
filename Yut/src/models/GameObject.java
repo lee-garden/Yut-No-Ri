@@ -1,21 +1,25 @@
 package models;
 
-public class ClickableGameObject {
+public class GameObject {
   private int id;
   private int row;
   private int column;
   boolean clickable;
+  private boolean changeable;
 
-  public int getId(){
+  // gameobject id, not unique
+  int getId(){
     return id;
   }
   void setId(int id){
     this.id = id;
   }
-  public int getRow(){
+
+  // game object location
+  int getRow(){
     return row;
   }
-  public int getColumn() {
+  int getColumn() {
     return column;
   }
   void setLocation(int row, int column){
@@ -23,13 +27,26 @@ public class ClickableGameObject {
     this.column = column;
   }
 
+  // clickable game object
   void setClickable(){
     clickable = true;
   }
   void resetClickable(){
     clickable =false;
   }
-  public boolean isClickable(){
+  boolean isClickable(){
     return clickable;
   }
+
+  // related with change permission
+  boolean isChangeable(){
+    return changeable;
+  }
+  void setChangeable(){
+    changeable = true;
+  }
+  void resetChangeable(){
+    changeable = false;
+  }
+
 }
