@@ -2,75 +2,50 @@ package models;
 import java.util.ArrayList;
 
 
-class Piece extends ClickableGameObject {
+class Piece extends GameObject {
 
   private int ownerId;
-  private boolean reachToTheFinish;
-  private ArrayList<Piece> group;
-  private int numOfGroupedPiece;
-  private boolean outOfPan;
-
-  private int firstRow;
-  private int firstColumn;
-
-  int getNumOfGroupedPiece(){
-    return numOfGroupedPiece;
-  }
+  // Represent the piece is not on the board
+  private boolean outOfBoard;
+  final int defaultRow = 0;
+  final int defaultColumn = 0;
 
   Piece(int row, int column,int ownerId, int pieceId) {
-
     setId(pieceId);
     this.ownerId = ownerId;
-    group = new ArrayList<Piece>();
-    group.add(this);
-    numOfGroupedPiece = 1;
-
     setLocation(row, column);
-
-    firstRow = row;
-    firstColumn = column;
-
-    reachToTheFinish = false;
     this.setClickable();
-    outOfPan = true;
+    outOfBoard = true;
   }
 
+  // get owner id
   int getOwnerId(){
     return ownerId;
   }
 
+  // clickable represent whether it exist or not
+  // if not clickable, the piece is finished.
   void setGone(){
-    reachToTheFinish=true;
+    resetClickable();
   }
 
   boolean isGone(){
-    return reachToTheFinish;
+    return !clickable;
   }
 
-  void addGroup(Piece pieceId){
-    group.add(pieceId);
-    numOfGroupedPiece++;
-  }
-
-  ArrayList<Piece> getGroup(){
-    return group;
-  }
-
+  // make piece on out side of the Board
   void reset(){
-    setLocation(firstRow, firstColumn);
-    group.clear();
-    group.add(this);
-    outOfPan = true;
-    numOfGroupedPiece = 1;
+    this.setLocation(defaultRow, defaultColumn);
+    outOfBoard = true;
   }
 
-  boolean isOutOfPan(){
-    return outOfPan;
+  // where to put piece problem
+  boolean isOutOfBoard(){
+    return outOfBoard;
   }
 
-  // 이름 수정 필요
-  void setOutOfPan(){
-    outOfPan = false;
+  void setOutOfBoard(){
+    outOfBoard = false;
   }
 
 }

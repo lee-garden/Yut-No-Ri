@@ -3,17 +3,22 @@ package models;
 import java.util.ArrayList;
 public class Board {
 
+  // Board size
   public final int BOARDSIZE = 29;
 
+  // Reachable direction
   final int NORMALBOARD = 1;
   final int TWOWAYBOARD = 2;
 
+  // managing Circles
   private ArrayList<Circle> boards;
-  private ArrayList<Circle> highlightedAndClicableCircle;
+
+  // managing changed Circles
+  private ArrayList<Circle> changedCircle;
 
   Board(){
     boards = new ArrayList<Circle>(0);
-    highlightedAndClicableCircle = new ArrayList<Circle>();
+    changedCircle = new ArrayList<Circle>();
 
     // 모퉁이 빼고 모서리 16개
     for(int i = 2; i < 7; i++){
@@ -59,8 +64,8 @@ public class Board {
 
   }
 
-
-  Circle getCircleByRowCoulmn(int row, int column){
+  // get Circle by location
+  Circle getCircleByRowColumn(int row, int column){
     for(Circle i : boards){
       if(i.getRow() == row && i.getColumn() == column)
         return i;
@@ -68,17 +73,19 @@ public class Board {
     return null;
   }
 
-  void setAllUnusable(){
-    for(Circle i : highlightedAndClicableCircle){
-      i.resetClickable();
+  // set every changed Circle to unchangeable
+  void setAllUnuChangeable(){
+    for(Circle i : changedCircle){
+      i.resetChangeable();
     }
-    highlightedAndClicableCircle.clear();
+    changedCircle.clear();
   }
 
-  void addHighlightedAndClickableCircleByLocation(int row, int column){
-    Circle chosenCircle = getCircleByRowCoulmn(row, column);
-    chosenCircle.setClickable();
-    highlightedAndClicableCircle.add(chosenCircle);
+  // set Circle changeable which is on given location
+  void setCircleChangeable(int row, int column){
+    Circle chosenCircle = getCircleByRowColumn(row, column);
+    if(chosenCircle != null) {
+      changedCircle.add(chosenCircle);
+    }
   }
-
 }

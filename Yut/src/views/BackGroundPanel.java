@@ -29,8 +29,13 @@ import javax.swing.border.LineBorder;
 
 public class BackGroundPanel extends JPanel{
   private BufferedImage img;
-  private String playerNumber;
-  private String pieceNumber;
+  private int playerNumber;
+  private int pieceNumber;
+
+  public JButton enter;
+
+  public JTextField playerNumberInput;
+  public JTextField pieceNumberInput;
 
   public BackGroundPanel() {
 
@@ -63,7 +68,7 @@ public class BackGroundPanel extends JPanel{
     enterBtnPanel.setLayout(new BorderLayout());
     enterBtnPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-    JButton enter= new JButton("enter");
+    enter= new JButton("enter");
 
     Color pink = new Color(255,160,154);
     Color red = new Color(165, 8, 33);
@@ -75,35 +80,22 @@ public class BackGroundPanel extends JPanel{
     enter.setOpaque(true);
     enterBtnPanel.add(enter);
 
-    JTextField playerNumberInput = new JTextField("Type # player!");
-    JTextField pieceNumberInput = new JTextField("Type # number!");
+    playerNumberInput = new JTextField("Type # player!");
+    pieceNumberInput = new JTextField("Type # number!");
     buttonPanel.add(playerNumberInput, BorderLayout.SOUTH);
     buttonPanel.add(pieceNumberInput, BorderLayout.SOUTH);
 
-    class UIclick implements MouseListener {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        YutGui.mainFrame.setVisible(false);
-
-        if (e.getSource().equals(enter)) {
-          YutGui.setupYutGUI();
-        }
-      }
-      @Override
-      public void mousePressed(MouseEvent e) {
-      }
-      @Override
-      public void mouseReleased(MouseEvent e) {
-      }
-      @Override
-      public void mouseEntered(MouseEvent e) {
-      }
-      @Override
-      public void mouseExited(MouseEvent e) {
-      }
-    }
-
-    enter.addMouseListener(new UIclick());
+//    enter.addActionListener(new ActionListener() {
+//      @Override
+//      public void actionPerformed(ActionEvent e) {
+//        YutGui.mainFrame.setVisible(false);
+//        playerNumber = Integer.parseInt(playerNumberInput.getText());
+//        pieceNumber = Integer.parseInt(pieceNumberInput.getText());
+//        if (e.getSource().equals(enter)) {
+//          YutGui.setupYutGUI(playerNumber, pieceNumber);
+//        }
+//      }
+//    });
 
     //INPUT TEXT AREA
     playerNumberInput.setBackground(Color.BLUE);
@@ -125,5 +117,18 @@ public class BackGroundPanel extends JPanel{
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     g.drawImage(img, 0, 0, this);
+  }
+
+  public int getPlayerNumber(){
+    return this.playerNumber;
+  }
+  public void setPlayerNumber(int playerNum){
+    this.playerNumber=playerNum;
+  }
+  public int getPieceNumber(){
+    return this.pieceNumber;
+  }
+  public void setPieceNumber(int pieceNum){
+    this.pieceNumber=pieceNum;
   }
 }
