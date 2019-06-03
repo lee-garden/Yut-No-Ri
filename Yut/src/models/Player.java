@@ -7,6 +7,7 @@ public class Player {
   private ArrayList<ArrayList<Piece>> players;
   private int pieceNumber;
   private int playerNumber;
+  private ArrayList<Integer> resultSet;
 
   Player(int playerNumber, int pieceNumber){
     this.playerNumber = playerNumber;
@@ -43,7 +44,8 @@ public class Player {
     return null;
   }
   // get one player's pieces.
-  ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
+
+  public ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
     return players.get(playerId);
   }
 

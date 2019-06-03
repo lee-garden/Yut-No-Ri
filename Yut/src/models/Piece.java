@@ -11,7 +11,6 @@ class Piece extends GameObject {
   final int defaultColumn = 0;
 
   Piece(int row, int column,int ownerId, int pieceId) {
-
     setId(pieceId);
     this.ownerId = ownerId;
     setLocation(row, column);
