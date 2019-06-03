@@ -6,6 +6,7 @@ import models.YutNoRiSet;
 
 //import models.Circle;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -36,26 +37,26 @@ public class eventController {
 //            }
 //        });
 
-    public boolean gameProgress(int turn, models.YutNoRiSet set){
+    public boolean gameProgress(int turn, models.YutNoRiSet set) {
         models.YutNoRiSet yutSet = set;
         int numCanMove=0;
         int catchPoint=0;
-
         resultSet = new ArrayList<Integer>();
         int result;
+        boolean endCondition;
 
-        do{
-            if(catchPoint>=1){
+        do {
+            if (catchPoint >= 1) {
                 catchPoint--;
             }
             /*  Before Yut Roll State  */
-            do{
+            do {
                 result = yutSet.rollYut(); //윷을 굴린 결과를 배열에 저장
                 resultSet.add(result);
                 numCanMove++;
-            }while(result==4 || result==0);//모나 윷이 나오면 한번 더 윳을 굴린다.
+            } while (result == 4 || result == 0);//모나 윷이 나오면 한번 더 윳을 굴린다.
 
-            while(numCanMove>=1){// 움직일 수 있는 횟수가 남아있는동안
+            while (numCanMove >= 1) {// 움직일 수 있는 횟수가 남아있는동안
 
                 /*  Choose Move Piece State  */
                 //chosenPicecId = choicePiece(); // 움직일 말을 선택하고
@@ -68,11 +69,15 @@ public class eventController {
                     //yutSet.move();    // numCanMove가 1이라면 바로 움직이면 된다.
                     numCanMove--;
                 }
+
+                //yutSet.move(picId, nextLocation[0], nextLocation[1]);    // numCanMove가 1이라면 바로 움직이면 된다.
+                numCanMove--;
             }
         }while(catchPoint>1); // checkPoint 즉, 상대 말을 잡은만큼 턴을 더 진행 할 수 있음.
 
-        return checkEndGame();
+        endCondition = checkEndGame();
 
+        return endCondition;
     }
 
     public void choicePiece(int pic){
@@ -84,7 +89,6 @@ public class eventController {
         //if(numOfPiece<=0) {end = true;}
         return end;
     }
-
 //    public void showMovable(ArrayList<Integer> result, int pieceId, models.YutNoRiSet set){
 //        if(tempP.getOutOfPan()){
 //            tempC = board.getCircleByRowCoulmn(1,1);

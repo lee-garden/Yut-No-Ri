@@ -28,11 +28,11 @@ public class YutNoRiSet {
 
   private int playerTurn;
 
-  int getPlayerTurn(){
+  public int getPlayerTurn(){
     return playerTurn;
   }
 
-  void setPlayerTurn(int turn){
+  public void setPlayerTurn(int turn){
     this.playerTurn = turn;
   }
 
