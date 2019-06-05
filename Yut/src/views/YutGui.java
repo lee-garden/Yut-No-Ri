@@ -3,22 +3,16 @@ package views;
 
 import models.YutNoRiSet;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -43,7 +37,7 @@ public class YutGui {
     player = new JLabel[] { player1, player2, player3, player4};
   }
 
-  private static void setPiecePanel(BufferedImage[] pieceList) {
+  private static void setPiecePanel(BufferedImage[] pieceList, UIclick clickAct) {
     ImagePanel piece1 = new ImagePanel();
     ImagePanel piece2 = new ImagePanel();
     ImagePanel piece3 = new ImagePanel();
@@ -53,6 +47,11 @@ public class YutGui {
     piece2.setImage(pieceList[1]);
     piece3.setImage(pieceList[2]);
     piece4.setImage(pieceList[3]);
+
+    piece1.addMouseListener(clickAct);
+    piece2.addMouseListener(clickAct);
+    piece3.addMouseListener(clickAct);
+    piece4.addMouseListener(clickAct);
 
     beginPiece = new ImagePanel[] { piece1, piece2, piece3, piece4};
   }
@@ -91,6 +90,7 @@ public class YutGui {
     yutBoard.setBorder(new EmptyBorder(30, 30, 30, 30));
 
     btn = new ImagePanel[8][8];
+    UIclick clickAction = new UIclick();
 
     for(int i = 1; i < 8; i++) {
       for(int j = 1; j < 8; j++) {
@@ -107,7 +107,7 @@ public class YutGui {
         } else {
           btn[i][j].setBackground(Color.WHITE);
         }
-
+        btn[i][j].addMouseListener(clickAction);
         yutBoard.add(btn[i][j]);
         btn[i][j].repaint();
       }
@@ -118,11 +118,33 @@ public class YutGui {
     statusPanels.setLayout(new GridLayout(playerNumber, 3));
     statusPanels.setBorder(new EmptyBorder(0, 30, 0, 30));
 
+    /* Right side border */
+    JPanel yutButtonPanels = new JPanel();
+    yutButtonPanels.setBorder(new EmptyBorder(0, 30, 0, 30));
+
+    // It' for yut result image
+    ImagePanel yutResultPanel = new ImagePanel();
+
+    ImageIcon ii = new ImageIcon(getClass().getResource("loadyut.gif"));
+
+    // resize image in button
+    ii.setImage(ii.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+    JButton yutBtn = new JButton("윷 던지기", ii);
+
+    yutBtn.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        // controller에서 윷 던졌음을 알리기
+        // System.out.print("hihi");
+      }
+    });
+
+    yutButtonPanels.add(yutBtn);
+
     // For piece Sprite
     BufferedImage[] pieceList = pieceSprite.pieceList;
 
     // set Player name and Piece at the side border
-    setPiecePanel(pieceList);
+    setPiecePanel(pieceList, clickAction);
     setPlayerLabel();
     for (int i=0; i< playerNumber; i++) {
       statusPanels.add(player[i]);
@@ -132,6 +154,7 @@ public class YutGui {
       // beginPiece[i].addMouseListener(clickBridge);
     }
 
+    contentPane.add(yutButtonPanels,  BorderLayout.LINE_START);
     contentPane.add(statusPanels, BorderLayout.LINE_END);
     contentPane.add(yutBoard, BorderLayout.CENTER);
     mainFrame.setVisible(true);
