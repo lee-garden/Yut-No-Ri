@@ -27,13 +27,16 @@ public class gameController {
             public void actionPerformed(ActionEvent e) {
                 yutgui.mainFrame.setVisible(false);
                 //pieceNumber = Integer.parseInt(yutgui.midPanel.pieceNumberInput.getText());
-                playerNumber=Integer.parseInt(midP.playerNumberInput.getText());
-                pieceNumber=Integer.parseInt(midP.pieceNumberInput.getText());
+                playerNumber = Integer.parseInt(midP.playerNumberInput.getText());
+                pieceNumber = Integer.parseInt(midP.pieceNumberInput.getText());
                 if (e.getSource().equals(midP.enter)) {
                     yutgui.setupYutGUI(playerNumber, pieceNumber);
                 }
-                yutSet.setOption(playerNumber,pieceNumber);
+                yutSet.setOption(playerNumber, pieceNumber);
+                yutSet.setPlayerTurn(0);
                 c = new eventController(yutSet, yutgui);
+                System.out.println("controller create");
+                c.gameProgress(yutSet.getPlayerTurn(), yutSet);
             }
         });
 
