@@ -24,7 +24,7 @@ public class Player {
   }
 
   // get Piece by piece id
-  Piece getPieceByPieceId(int pieceId){
+  public Piece getPieceByPieceId(int pieceId){
     if(pieceId/10 >= playerNumber && pieceId%10 >= pieceNumber){
       return null;
     }
@@ -32,7 +32,7 @@ public class Player {
     return players.get(pieceId/10).get(pieceId%10);
   }
   // get Piece by location of piece
-  Piece getPieceByLocation(int row, int column){
+  public Piece getPieceByLocation(int row, int column){
     for(int i = 0; i < playerNumber; i++){
       for( Piece j : players.get(i)){
         if(j.getRow() == row && j.getColumn() == column){
@@ -43,27 +43,25 @@ public class Player {
     return null;
   }
   // get one player's pieces.
-  ArrayList<Piece> getPieceArrayByPlayerId(int playerId){
+  public ArrayList<Piece> getPlayerPieces(int playerId){
     return players.get(playerId);
   }
 
-  // Used to determine whether or not it is end
-  // return the least num of pieces which not yet get to finish
-  int getSmallestPieceLeft(){
-    int min = 100;
-    for(int i = 0; i < playerNumber; i++){
-      int numOfGonePiece=0;
-      for(Piece j : players.get(i)){
-        if(j.isGone()){
-          numOfGonePiece++;
+
+  public int getLeftNumOfPieceOfPlayer(int playerId){
+    try{
+      int numOfLeftPieces = 0;
+      for(Piece i : getPlayerPieces(playerId)){
+        if(!i.isGone()){
+          numOfLeftPieces++;
         }
       }
-      if(numOfGonePiece < min){
-        min = numOfGonePiece;
-      }
+    } catch (NullPointerException e){
+      /* error handle */
     }
-    return min;
+    return -1;
   }
+
 
   // return player id who's pieces are all get to the finish line
   public int getWinnerPlayerId(){
@@ -81,5 +79,15 @@ public class Player {
       }
     }
     return id;
+  }
+
+  public int getNumOfPiecesOutOfBoard(int playerId){
+    int numOfPieceLocateInOutOfBoard = 0;
+    for(Piece i : getPlayerPieces(playerId)){
+      if(i.isOutOfBoard()){
+        numOfPieceLocateInOutOfBoard++;
+      }
+    }
+    return numOfPieceLocateInOutOfBoard;
   }
 }

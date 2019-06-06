@@ -13,12 +13,8 @@ public class Board {
   // managing Circles
   private ArrayList<Circle> boards;
 
-  // managing changed Circles
-  private ArrayList<Circle> changedCircle;
-
   Board(){
     boards = new ArrayList<Circle>(0);
-    changedCircle = new ArrayList<Circle>();
 
     // 모퉁이 빼고 모서리 16개
     for(int i = 2; i < 7; i++){
@@ -65,7 +61,7 @@ public class Board {
   }
 
   // get Circle by location
-  Circle getCircleByRowColumn(int row, int column){
+  public Circle getCircleByLocation(int row, int column){
     for(Circle i : boards){
       if(i.getRow() == row && i.getColumn() == column)
         return i;
@@ -73,19 +69,18 @@ public class Board {
     return null;
   }
 
-  // set every changed Circle to unchangeable
-  void setAllUnuChangeable(){
-    for(Circle i : changedCircle){
-      i.resetChangeable();
+  public Circle getCircleByCircleId(int circleId){
+    for(Circle i : boards){
+      if(i.getId() == circleId){
+        return i;
+      }
     }
-    changedCircle.clear();
+    return null;
   }
 
-  // set Circle changeable which is on given location
-  void setCircleChangeable(int row, int column){
-    Circle chosenCircle = getCircleByRowColumn(row, column);
-    if(chosenCircle != null) {
-      changedCircle.add(chosenCircle);
+  public void showMovable(ArrayList<Integer> movableCircleIds){
+    for(int i : movableCircleIds){
+      getCircleByCircleId(i).setChangeable();
     }
   }
 }
